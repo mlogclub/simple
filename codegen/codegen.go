@@ -9,9 +9,9 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/m-log/simple/strcase"
+	"github.com/mlogclub/simple/strcase"
 
-	"github.com/m-log/simple"
+	"github.com/mlogclub/simple"
 )
 
 type GenerateStruct struct {

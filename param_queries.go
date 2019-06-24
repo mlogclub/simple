@@ -4,7 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/kataras/iris"
 
-	"github.com/m-log/simple/strcase"
+	"github.com/mlogclub/simple/strcase"
 )
 
 type ParamQueries struct {

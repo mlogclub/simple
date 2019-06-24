@@ -10,7 +10,7 @@ package admin
 import (
 	"{{.PkgName}}/model"
 	"{{.PkgName}}/services"
-	"github.com/m-log/simple"
+	"github.com/mlogclub/simple"
 	"github.com/kataras/iris"
 	"strconv"
 )

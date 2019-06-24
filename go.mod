@@ -1,4 +1,4 @@
-module github.com/m-log/simple
+module github.com/mlogclub/simple
 
 go 1.12
 

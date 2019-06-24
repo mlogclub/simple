@@ -9,7 +9,7 @@ package repositories
 
 import (
 	"{{.PkgName}}/model"
-	"github.com/m-log/simple"
+	"github.com/mlogclub/simple"
 	"github.com/jinzhu/gorm"
 )
 

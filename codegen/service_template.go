@@ -10,7 +10,7 @@ package services
 import (
 	"{{.PkgName}}/model"
 	"{{.PkgName}}/repositories"
-	"github.com/m-log/simple"
+	"github.com/mlogclub/simple"
 )
 
 type {{.Name}}Service struct {

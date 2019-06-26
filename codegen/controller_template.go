@@ -35,9 +35,12 @@ func (this *{{.Name}}Controller) AnyList() *simple.JsonResult {
 
 func (this *{{.Name}}Controller) PostCreate() *simple.JsonResult {
 	t := &model.{{.Name}}{}
-	this.Ctx.ReadForm(t)
+	err := this.Ctx.ReadForm(t)
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
 
-	err := this.{{.Name}}Service.Create(t)
+	err = this.{{.Name}}Service.Create(t)
 	if err != nil {
 		return simple.ErrorMsg(err.Error())
 	}
@@ -54,7 +57,10 @@ func (this *{{.Name}}Controller) PostUpdate() *simple.JsonResult {
 		return simple.ErrorMsg("entity not found")
 	}
 
-	this.Ctx.ReadForm(t)
+	err = this.Ctx.ReadForm(t)
+	if err != nil {
+		return simple.ErrorMsg(err.Error())
+	}
 
 	err = this.{{.Name}}Service.Update(t)
 	if err != nil {

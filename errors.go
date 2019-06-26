@@ -26,10 +26,10 @@ func NewError2(err error) *CodeError {
 
 // errorString is a trivial implementation of error.
 type CodeError struct {
-	code    int
-	message string
+	Code    int    `json:"code"`
+	Message string `json:"message"`
 }
 
 func (e *CodeError) Error() string {
-	return strconv.Itoa(e.code) + ": " + e.message
+	return strconv.Itoa(e.Code) + ": " + e.Message
 }

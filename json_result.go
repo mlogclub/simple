@@ -33,7 +33,7 @@ func Success() *JsonResult {
 }
 
 func Error(err *CodeError) *JsonResult {
-	return ErrorCode(err.code, err.message)
+	return ErrorCode(err.Code, err.Message)
 }
 
 func ErrorMsg(message string) *JsonResult {

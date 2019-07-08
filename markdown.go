@@ -51,7 +51,7 @@ func Markdown(mdText string) *MarkdownResult {
 	doc.Find("code").Each(func(i int, ele *goquery.Selection) {
 		code, err := ele.Html()
 		if nil != err {
-			logrus.Error("get element [%+v]' HTML failed: %s", ele, err)
+			logrus.Error("get element HTML failed", ele, err)
 		} else {
 			code = strings.Replace(code, "<", "&lt;", -1)
 			code = strings.Replace(code, ">", "&gt;", -1)

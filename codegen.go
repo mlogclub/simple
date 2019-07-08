@@ -1,4 +1,4 @@
-package codegen
+package simple
 
 import (
 	"bytes"
@@ -10,8 +10,6 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/mlogclub/simple/strcase"
-
-	"github.com/mlogclub/simple"
 )
 
 type GenerateStruct struct {
@@ -26,7 +24,8 @@ type GenerateField struct {
 
 type InputData struct {
 	PkgName   string
-	Name      string
+	Name      string // FuckShit
+	CamelName string // fuckShit
 	KebabName string // FuckShit -> fuck-shit
 	Fields    []GenerateField
 }
@@ -49,8 +48,8 @@ func Generate(baseDir, pkgName string, models ...GenerateStruct) {
 }
 
 func GetGenerateStruct(s interface{}) GenerateStruct {
-	structName := simple.StructName(s)
-	structFields := simple.StructFields(s)
+	structName := StructName(s)
+	structFields := StructFields(s)
 
 	var fields []GenerateField
 	for _, f := range structFields {
@@ -71,72 +70,87 @@ func GetGenerateStruct(s interface{}) GenerateStruct {
 
 func generateRepository(baseDir, pkgName string, s GenerateStruct) error {
 	var b bytes.Buffer
-	repositoryTmpl.Execute(&b, &InputData{
+	err := repositoryTmpl.Execute(&b, &InputData{
 		PkgName:   pkgName,
 		Name:      s.Name,
+		CamelName: strcase.ToLowerCamel(s.Name),
 		KebabName: strcase.ToKebab(s.Name),
 		Fields:    s.Fields,
 	})
-	c := b.String()
-
-	path, err := getFilePath(baseDir, "/repositories/"+strcase.ToSnake(s.Name+"_repository.go"))
 	if err != nil {
 		return err
 	}
-	return writeFile(path, c)
+	c := b.String()
+
+	p, err := getFilePath(baseDir, "/repositories/"+strcase.ToSnake(s.Name+"_repository.go"))
+	if err != nil {
+		return err
+	}
+	return writeFile(p, c)
 }
 
 func generateService(baseDir, pkgName string, s GenerateStruct) error {
 	var b bytes.Buffer
-	serviceTmpl.Execute(&b, &InputData{
+	err := serviceTmpl.Execute(&b, &InputData{
 		PkgName:   pkgName,
 		Name:      s.Name,
+		CamelName: strcase.ToLowerCamel(s.Name),
 		KebabName: strcase.ToKebab(s.Name),
 		Fields:    s.Fields,
 	})
-	c := b.String()
-
-	path, err := getFilePath(baseDir, "/services/"+strcase.ToSnake(s.Name+"_service.go"))
 	if err != nil {
 		return err
 	}
-	return writeFile(path, c)
+	c := b.String()
+
+	p, err := getFilePath(baseDir, "/services/"+strcase.ToSnake(s.Name+"_service.go"))
+	if err != nil {
+		return err
+	}
+	return writeFile(p, c)
 }
 
 func generateController(baseDir, pkgName string, s GenerateStruct) error {
 	var b bytes.Buffer
-	controllerTmpl.Execute(&b, &InputData{
+	err := controllerTmpl.Execute(&b, &InputData{
 		PkgName:   pkgName,
 		Name:      s.Name,
+		CamelName: strcase.ToLowerCamel(s.Name),
 		KebabName: strcase.ToKebab(s.Name),
 		Fields:    s.Fields,
 	})
-	c := b.String()
-
-	path, err := getFilePath(baseDir, "/controllers/admin/"+strcase.ToSnake(s.Name+"_controller.go"))
 	if err != nil {
 		return err
 	}
-	return writeFile(path, c)
+	c := b.String()
+
+	p, err := getFilePath(baseDir, "/controllers/admin/"+strcase.ToSnake(s.Name+"_controller.go"))
+	if err != nil {
+		return err
+	}
+	return writeFile(p, c)
 }
 
 func generateWeb(baseDir, pkgName string, s GenerateStruct) error {
 	var b bytes.Buffer
-	viewIndexTmpl.Execute(&b, &InputData{
+	err := viewIndexTmpl.Execute(&b, &InputData{
 		PkgName:   pkgName,
 		Name:      s.Name,
 		KebabName: strcase.ToKebab(s.Name),
 		Fields:    s.Fields,
 	})
+	if err != nil {
+		return err
+	}
 	c := b.String()
 
 	sub := path.Join("/web/admin/src/views/", strcase.ToKebab(s.Name), "Index.vue")
 
-	path, err := getFilePath(baseDir, sub)
+	p, err := getFilePath(baseDir, sub)
 	if err != nil {
 		return err
 	}
-	return writeFile(path, c)
+	return writeFile(p, c)
 }
 
 func getFilePath(baseDir, sub string) (filepath string, err error) {
@@ -147,7 +161,7 @@ func getFilePath(baseDir, sub string) (filepath string, err error) {
 }
 
 func writeFile(filepath string, content string) error {
-	exists, err := simple.PathExists(filepath)
+	exists, err := PathExists(filepath)
 	if err != nil {
 		return err
 	}
@@ -155,5 +169,5 @@ func writeFile(filepath string, content string) error {
 		fmt.Println("文件已经存在...", filepath)
 		filepath = filepath + ".temp"
 	}
-	return simple.WriteString(filepath, content, true)
+	return WriteString(filepath, content, true)
 }

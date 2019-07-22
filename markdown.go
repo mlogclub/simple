@@ -1,7 +1,6 @@
 package simple
 
 import (
-	"crypto/md5"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/iris-contrib/blackfriday"
 	"github.com/microcosm-cc/bluemonday"
@@ -11,20 +10,71 @@ import (
 	"strings"
 )
 
-type MarkdownResult struct {
-	ContentHtml string
-	SummaryText string
-	thumbUrl    string
+type MdResult struct {
+	ContentHtml string // 内容
+	SummaryText string // 摘要
+	TocHtml     string // TOC目录
+	ThumbUrl    string // 缩略图
 }
 
-// Markdown process the specified markdown text to HTML.
-func Markdown(mdText string) *MarkdownResult {
+// option
+type MdOption func(*SimpleMd)
+
+// 开启toc
+func MdWithTOC() MdOption {
+	return func(md *SimpleMd) {
+		md.toc = true
+	}
+}
+
+// 开启缩略图
+func MdWithThumb(md *SimpleMd) MdOption {
+	return func(md *SimpleMd) {
+		md.thumb = true
+	}
+}
+
+// 生成摘要的长度
+func MdWithSummaryLength(summaryLength int) MdOption {
+	return func(md *SimpleMd) {
+		md.summaryTextLength = summaryLength
+	}
+}
+
+// simple md
+type SimpleMd struct {
+	summaryTextLength int  // 摘要长度
+	toc               bool // 是否开启Toc
+	thumb             bool // 是否构建目录
+}
+
+// new simple md
+func NewMd(options ...MdOption) *SimpleMd {
+	simpleMd := &SimpleMd{
+		summaryTextLength: 256,
+		toc:               false,
+		thumb:             false,
+	}
+	for _, option := range options {
+		option(simpleMd)
+	}
+	return simpleMd
+}
+
+// run
+func (this *SimpleMd) Run(mdText string) *MdResult {
 	mdText = strings.Replace(mdText, "\r\n", "\n", -1)
 
-	digest := md5.New()
-	digest.Write([]byte(mdText))
+	var unsafe []byte
+	if this.toc {
+		htmlRenderer := blackfriday.WithRenderer(blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{
+			Flags: blackfriday.CommonHTMLFlags | blackfriday.TOC,
+		}))
+		unsafe = blackfriday.Run([]byte([]byte(mdText)), htmlRenderer)
+	} else {
+		unsafe = blackfriday.Run([]byte(mdText))
+	}
 
-	unsafe := blackfriday.Run([]byte(mdText))
 	contentHTML := string(unsafe)
 	doc, _ := goquery.NewDocumentFromReader(strings.NewReader(contentHTML))
 
@@ -59,6 +109,12 @@ func Markdown(mdText string) *MarkdownResult {
 		}
 	})
 
+	var tocHtml string
+	if this.toc {
+		nav := doc.Find("nav").First().Remove()
+		tocHtml, _ = nav.Html()
+	}
+
 	contentHTML, _ = doc.Find("body").Html()
 	contentHTML = bluemonday.UGCPolicy().AllowAttrs("class").Matching(regexp.MustCompile("^language-[a-zA-Z0-9]+$")).OnElements("code").
 		AllowAttrs("data-src").OnElements("img").
@@ -73,17 +129,19 @@ func Markdown(mdText string) *MarkdownResult {
 		AllowAttrs("src", "type", "width", "height", "wmode", "allowNetworking").OnElements("embed").
 		Sanitize(contentHTML)
 
-	summaryText := summaryText(doc)
-
-	return &MarkdownResult{
+	return &MdResult{
 		ContentHtml: contentHTML,
-		SummaryText: summaryText,
-		thumbUrl:    thumbnailUrl(doc),
+		SummaryText: this.summaryText(doc),
+		ThumbUrl:    this.thumbnailUrl(doc),
+		TocHtml:     tocHtml,
 	}
 }
 
 // 缩略图
-func thumbnailUrl(doc *goquery.Document) string {
+func (this *SimpleMd) thumbnailUrl(doc *goquery.Document) string {
+	if !this.thumb {
+		return ""
+	}
 	selection := doc.Find("img").First()
 	thumbnailURL, _ := selection.Attr("src")
 	if "" == thumbnailURL {
@@ -93,7 +151,11 @@ func thumbnailUrl(doc *goquery.Document) string {
 }
 
 // 摘要
-func summaryText(doc *goquery.Document) string {
+func (this *SimpleMd) summaryText(doc *goquery.Document) string {
+	if this.summaryTextLength <= 0 {
+		return ""
+	}
 	text := doc.Text()
-	return GetSummary(text, 256)
+	text = strings.TrimSpace(text)
+	return GetSummary(text, this.summaryTextLength)
 }

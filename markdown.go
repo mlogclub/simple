@@ -1,14 +1,12 @@
 package simple
 
 import (
-	"bytes"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/iris-contrib/blackfriday"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/sirupsen/logrus"
 	"github.com/vinta/pangu"
 	"regexp"
-	"strconv"
 	"strings"
 )
 
@@ -67,17 +65,16 @@ func NewMd(options ...MdOption) *SimpleMd {
 func (this *SimpleMd) Run(mdText string) *MdResult {
 	mdText = strings.Replace(mdText, "\r\n", "\n", -1)
 
-	// var unsafe []byte
-	// if this.toc {
-	// 	htmlRenderer := blackfriday.WithRenderer(blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{
-	// 		Flags: blackfriday.CommonHTMLFlags | blackfriday.TOC,
-	// 	}))
-	// 	unsafe = blackfriday.Run([]byte([]byte(mdText)), htmlRenderer)
-	// } else {
-	// 	unsafe = blackfriday.Run([]byte(mdText))
-	// }
+	var unsafe []byte
+	if this.toc {
+		htmlRenderer := blackfriday.WithRenderer(blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{
+			Flags: blackfriday.CommonHTMLFlags | blackfriday.TOC,
+		}))
+		unsafe = blackfriday.Run([]byte([]byte(mdText)), htmlRenderer)
+	} else {
+		unsafe = blackfriday.Run([]byte(mdText))
+	}
 
-	unsafe := blackfriday.Run([]byte(mdText))
 	contentHTML := string(unsafe)
 	doc, _ := goquery.NewDocumentFromReader(strings.NewReader(contentHTML))
 
@@ -112,12 +109,11 @@ func (this *SimpleMd) Run(mdText string) *MdResult {
 		}
 	})
 
-	// var tocHtml string
-	// if this.toc {
-	// 	nav := doc.Find("nav").First().Remove()
-	// 	tocHtml, _ = nav.Html()
-	// }
-	tocHtml := this.buildToc(*doc)
+	var tocHtml string
+	if this.toc {
+		nav := doc.Find("nav").First().Remove()
+		tocHtml, _ = nav.Html()
+	}
 
 	contentHTML, _ = doc.Find("body").Html()
 	contentHTML = bluemonday.UGCPolicy().AllowAttrs("class").Matching(regexp.MustCompile("^language-[a-zA-Z0-9]+$")).OnElements("code").
@@ -164,30 +160,30 @@ func (this *SimpleMd) summaryText(doc *goquery.Document) string {
 	return GetSummary(text, this.summaryTextLength)
 }
 
-// 构建toc
-func (this *SimpleMd) buildToc(doc goquery.Document) string {
-	if !this.toc {
-		return ""
-	}
-	elements := doc.Find("h1, h2, h3, h4, h5")
-	if nil == elements || elements.Length() < 3 {
-		return ""
-	}
-
-	builder := bytes.Buffer{}
-	builder.WriteString("<ul")
-	elements.Each(func(i int, element *goquery.Selection) {
-		tagName := goquery.NodeName(element)
-		id := "toc_" + tagName + "_" + strconv.Itoa(i)
-		element.SetAttr("id", id)
-		builder.WriteString("<li class='toc__")
-		builder.WriteString(tagName)
-		builder.WriteString("'><a href=\"#")
-		builder.WriteString(id)
-		builder.WriteString("\">")
-		builder.WriteString(element.Text())
-		builder.WriteString("</a></li>")
-	})
-	builder.WriteString("</ul>")
-	return builder.String()
-}
+// // 构建toc
+// func (this *SimpleMd) buildToc(doc goquery.Document) string {
+// 	if !this.toc {
+// 		return ""
+// 	}
+// 	elements := doc.Find("h1, h2, h3, h4, h5")
+// 	if nil == elements || elements.Length() < 3 {
+// 		return ""
+// 	}
+//
+// 	builder := bytes.Buffer{}
+// 	builder.WriteString("<ul")
+// 	elements.Each(func(i int, element *goquery.Selection) {
+// 		tagName := goquery.NodeName(element)
+// 		id := "toc_" + tagName + "_" + strconv.Itoa(i)
+// 		element.SetAttr("id", id)
+// 		builder.WriteString("<li class='toc__")
+// 		builder.WriteString(tagName)
+// 		builder.WriteString("'><a href=\"#")
+// 		builder.WriteString(id)
+// 		builder.WriteString("\">")
+// 		builder.WriteString(element.Text())
+// 		builder.WriteString("</a></li>")
+// 	})
+// 	builder.WriteString("</ul>")
+// 	return builder.String()
+// }

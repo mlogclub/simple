@@ -13,9 +13,10 @@ func TestMarkdown(t *testing.T) {
 ### 三级目录
 ## 相关链接
 ## 目录3
+# 一级目录
+## 目录2
 `)
 
 	fmt.Println(mr.TocHtml)
 	fmt.Println("---------------------------------------------------------------")
-	fmt.Println(mr.ContentHtml)
 }

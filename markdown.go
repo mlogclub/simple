@@ -127,7 +127,7 @@ func (this *SimpleMd) Run(mdText string) *MdResult {
 		ContentHtml: contentHTML,
 		SummaryText: this.summaryText(doc),
 		ThumbUrl:    this.thumbnailUrl(doc),
-		TocHtml:     this.tocHtml(doc),
+		TocHtml:     this.tocHtml(*doc),
 	}
 }
 
@@ -144,7 +144,7 @@ func (this *SimpleMd) thumbnailUrl(doc *goquery.Document) string {
 	return thumbnailURL
 }
 
-func (this *SimpleMd) tocHtml(doc *goquery.Document) string {
+func (this *SimpleMd) tocHtml(doc goquery.Document) string {
 	if !this.toc {
 		return ""
 	}

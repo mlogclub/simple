@@ -109,12 +109,6 @@ func (this *SimpleMd) Run(mdText string) *MdResult {
 		}
 	})
 
-	var tocHtml string
-	if this.toc {
-		nav := doc.Find("nav").First().Remove()
-		tocHtml, _ = nav.Html()
-	}
-
 	contentHTML, _ = doc.Find("body").Html()
 	contentHTML = bluemonday.UGCPolicy().AllowAttrs("class").Matching(regexp.MustCompile("^language-[a-zA-Z0-9]+$")).OnElements("code").
 		AllowAttrs("data-src").OnElements("img").
@@ -133,7 +127,7 @@ func (this *SimpleMd) Run(mdText string) *MdResult {
 		ContentHtml: contentHTML,
 		SummaryText: this.summaryText(doc),
 		ThumbUrl:    this.thumbnailUrl(doc),
-		TocHtml:     tocHtml,
+		TocHtml:     this.tocHtml(doc),
 	}
 }
 
@@ -150,18 +144,27 @@ func (this *SimpleMd) thumbnailUrl(doc *goquery.Document) string {
 	return thumbnailURL
 }
 
-// 摘要
-func (this *SimpleMd) summaryText(doc *goquery.Document) string {
-	if this.summaryTextLength <= 0 {
+func (this *SimpleMd) tocHtml(doc *goquery.Document) string {
+	if !this.toc {
 		return ""
 	}
-	text := doc.Text()
-	text = strings.TrimSpace(text)
-	return GetSummary(text, this.summaryTextLength)
+	top := doc.Find("nav > ul > li")
+	topA := doc.Find("nav > ul > li > a")
+
+	if top.Size() == 0 { // 说明没找到toc
+		return ""
+	}
+	if top.Size() == 1 && topA.Size() == 0 { // 说明外面有一层空的ul包裹，需要去掉它
+		tocHtml, _ := top.Html()
+		return tocHtml
+	} else {
+		tocHtml, _ := doc.Find("nav").First().Remove().Html()
+		return tocHtml
+	}
 }
 
 // // 构建toc
-// func (this *SimpleMd) buildToc(doc goquery.Document) string {
+// func (this *SimpleMd) tocHtml(doc goquery.Document) string {
 // 	if !this.toc {
 // 		return ""
 // 	}
@@ -187,3 +190,13 @@ func (this *SimpleMd) summaryText(doc *goquery.Document) string {
 // 	builder.WriteString("</ul>")
 // 	return builder.String()
 // }
+
+// 摘要
+func (this *SimpleMd) summaryText(doc *goquery.Document) string {
+	if this.summaryTextLength <= 0 {
+		return ""
+	}
+	text := doc.Text()
+	text = strings.TrimSpace(text)
+	return GetSummary(text, this.summaryTextLength)
+}

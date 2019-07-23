@@ -155,6 +155,7 @@ func (this *SimpleMd) tocHtml(doc *goquery.Document) string {
 		return ""
 	}
 	if top.Size() == 1 && topA.Size() == 0 { // 说明外面有一层空的ul包裹，需要去掉它
+		doc.Find("nav").First().Remove()
 		tocHtml, _ := top.Html()
 		return tocHtml
 	} else {

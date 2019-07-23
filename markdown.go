@@ -109,7 +109,7 @@ func (this *SimpleMd) Run(mdText string) *MdResult {
 		}
 	})
 
-	// 处理内容中的toc内容
+	tocHtml := this.buildTocHtml(doc)
 	doc.Find("nav").Remove()
 
 	contentHTML, _ = doc.Find("body").Html()
@@ -130,7 +130,7 @@ func (this *SimpleMd) Run(mdText string) *MdResult {
 		ContentHtml: contentHTML,
 		SummaryText: this.summaryText(doc),
 		ThumbUrl:    this.thumbnailUrl(doc),
-		TocHtml:     this.tocHtml(doc),
+		TocHtml:     tocHtml,
 	}
 }
 
@@ -147,7 +147,7 @@ func (this *SimpleMd) thumbnailUrl(doc *goquery.Document) string {
 	return thumbnailURL
 }
 
-func (this SimpleMd) tocHtml(doc *goquery.Document) string {
+func (this SimpleMd) buildTocHtml(doc *goquery.Document) string {
 	if !this.toc {
 		return ""
 	}

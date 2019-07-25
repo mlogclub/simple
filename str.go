@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	uuid "github.com/iris-contrib/go.uuid"
 )
 
 // 截取字符串
@@ -23,6 +24,14 @@ func Substr(s string, start, length int) string {
 		end = start + length
 	}
 	return string(bt[start:end])
+}
+
+// uuid
+func Uuid() string {
+	u, _ := uuid.NewV4()
+	s := u.String()
+	s = strings.ReplaceAll(s, "-", "")
+	return s
 }
 
 // 字符成长度

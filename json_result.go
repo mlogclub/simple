@@ -24,6 +24,13 @@ func JsonData(data interface{}) *JsonResult {
 	}
 }
 
+func JsonPageData(results []interface{}, page *Paging) *JsonResult {
+	return JsonData(&PageResult{
+		Results: results,
+		Page:    page,
+	})
+}
+
 func Success() *JsonResult {
 	return &JsonResult{
 		ErrorCode: 0,

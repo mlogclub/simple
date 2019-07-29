@@ -39,7 +39,7 @@ func JsonSuccess() *JsonResult {
 	}
 }
 
-func JsonError(err *codeError) *JsonResult {
+func JsonError(err *CodeError) *JsonResult {
 	return JsonErrorCode(err.Code, err.Message)
 }
 

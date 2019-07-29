@@ -31,7 +31,7 @@ func JsonPageData(results interface{}, page *Paging) *JsonResult {
 	})
 }
 
-func Success() *JsonResult {
+func JsonSuccess() *JsonResult {
 	return &JsonResult{
 		ErrorCode: 0,
 		Data:      nil,
@@ -39,11 +39,11 @@ func Success() *JsonResult {
 	}
 }
 
-func Error(err *CodeError) *JsonResult {
-	return ErrorCode(err.Code, err.Message)
+func JsonError(err *codeError) *JsonResult {
+	return JsonErrorCode(err.Code, err.Message)
 }
 
-func ErrorMsg(message string) *JsonResult {
+func JsonErrorMsg(message string) *JsonResult {
 	return &JsonResult{
 		ErrorCode: 0,
 		Message:   message,
@@ -52,11 +52,20 @@ func ErrorMsg(message string) *JsonResult {
 	}
 }
 
-func ErrorCode(code int, message string) *JsonResult {
+func JsonErrorCode(code int, message string) *JsonResult {
 	return &JsonResult{
 		ErrorCode: code,
 		Message:   message,
 		Data:      nil,
+		Success:   false,
+	}
+}
+
+func JsonErrorData(code int, message string, data interface{}) *JsonResult {
+	return &JsonResult{
+		ErrorCode: code,
+		Message:   message,
+		Data:      data,
 		Success:   false,
 	}
 }

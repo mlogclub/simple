@@ -8,28 +8,31 @@ var (
 	ErrorNotLogin = NewError(1, "请先登录")
 )
 
-// New returns an error that formats as the given text.
-func NewError(code int, text string) *CodeError {
-	return &CodeError{code, text}
+func NewError(code int, text string) *codeError {
+	return &codeError{code, text, nil}
 }
 
-func NewErrorMsg(text string) *CodeError {
-	return &CodeError{0, text}
+func NewErrorMsg(text string) *codeError {
+	return &codeError{0, text, nil}
 }
 
-func NewError2(err error) *CodeError {
+func NewErrorData(code int, text string, data interface{}) *codeError {
+	return &codeError{code, text, data}
+}
+
+func FromError(err error) *codeError {
 	if err == nil {
 		return nil
 	}
-	return &CodeError{0, err.Error()}
+	return &codeError{0, err.Error(), nil}
 }
 
-// errorString is a trivial implementation of error.
-type CodeError struct {
-	Code    int    `json:"code"`
-	Message string `json:"message"`
+type codeError struct {
+	Code    int
+	Message string
+	Data    interface{}
 }
 
-func (e *CodeError) Error() string {
+func (e *codeError) Error() string {
 	return strconv.Itoa(e.Code) + ": " + e.Message
 }

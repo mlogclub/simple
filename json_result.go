@@ -43,7 +43,7 @@ func JsonError(err *CodeError) *JsonResult {
 	return &JsonResult{
 		ErrorCode: err.Code,
 		Message:   err.Message,
-		Data:      nil,
+		Data:      err.Data,
 		Success:   false,
 	}
 }

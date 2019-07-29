@@ -40,7 +40,12 @@ func JsonSuccess() *JsonResult {
 }
 
 func JsonError(err *CodeError) *JsonResult {
-	return JsonErrorCode(err.Code, err.Message)
+	return &JsonResult{
+		ErrorCode: err.Code,
+		Message:   err.Message,
+		Data:      nil,
+		Success:   false,
+	}
 }
 
 func JsonErrorMsg(message string) *JsonResult {

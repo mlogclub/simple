@@ -31,6 +31,13 @@ func JsonPageData(results interface{}, page *Paging) *JsonResult {
 	})
 }
 
+func JsonCursorData(results interface{}, cursor string) *JsonResult {
+	return JsonData(&CursorResult{
+		Results: results,
+		Cursor:  cursor,
+	})
+}
+
 func JsonSuccess() *JsonResult {
 	return &JsonResult{
 		ErrorCode: 0,

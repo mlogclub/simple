@@ -104,6 +104,12 @@ type PageResult struct {
 	Results interface{} `json:"results"` // 数据
 }
 
+// Cursor分页返回数据
+type CursorResult struct {
+	Results interface{} `json:"results"` // 数据
+	Cursor  string      `json:"cursor"`  // 下一页
+}
+
 // 分页请求数据
 type Paging struct {
 	Page  int `json:"page"`  // 页码

@@ -69,7 +69,7 @@ func (this *{{.CamelName}}Repository) UpdateColumn(db *gorm.DB, id int64, name s
 }
 
 func (this *{{.CamelName}}Repository) Delete(db *gorm.DB, id int64) {
-	db.Model(&model.{{.Name}}{}).Delete("id", id)
+	db.Delete(&model.{{.Name}}{}, "id = ?", id)
 }
 
 `))

@@ -1,13 +1,14 @@
 package simple
 
 import (
+	"regexp"
+	"strings"
+
 	"github.com/PuerkitoBio/goquery"
 	"github.com/iris-contrib/blackfriday"
 	"github.com/microcosm-cc/bluemonday"
 	"github.com/sirupsen/logrus"
 	"github.com/vinta/pangu"
-	"regexp"
-	"strings"
 )
 
 type MdResult struct {
@@ -65,16 +66,18 @@ func NewMd(options ...MdOption) *SimpleMd {
 func (this *SimpleMd) Run(mdText string) *MdResult {
 	mdText = strings.Replace(mdText, "\r\n", "\n", -1)
 
-	var unsafe []byte
+	var htmlRenderer blackfriday.Option
 	if this.toc {
-		htmlRenderer := blackfriday.WithRenderer(blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{
-			Flags: blackfriday.CommonHTMLFlags | blackfriday.TOC,
+		htmlRenderer = blackfriday.WithRenderer(blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{
+			Flags: blackfriday.TOC,
 		}))
-		unsafe = blackfriday.Run([]byte([]byte(mdText)), htmlRenderer)
 	} else {
-		unsafe = blackfriday.Run([]byte(mdText))
+		htmlRenderer = blackfriday.WithRenderer(blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{
+			// Flags: blackfriday.TOC,
+		}))
 	}
 
+	unsafe := blackfriday.Run([]byte([]byte(mdText)), htmlRenderer)
 	contentHTML := string(unsafe)
 	doc, _ := goquery.NewDocumentFromReader(strings.NewReader(contentHTML))
 

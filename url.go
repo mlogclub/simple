@@ -23,6 +23,10 @@ func (this *UrlBuilder) GetQuery() url.Values {
 	return this.query
 }
 
+func (this *UrlBuilder) GetURL() *url.URL {
+    return this.u
+}
+
 func (this *UrlBuilder) Build() *url.URL {
 	this.u.RawQuery = this.query.Encode()
 	return this.u

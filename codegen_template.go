@@ -223,7 +223,7 @@ var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
 			<el-table-column prop="{{.CamelName}}" label="{{.CamelName}}"></el-table-column>
             {{end}}
             <el-table-column label="操作" width="150">
-                <template scope="scope">
+                <template slot-scope="scope">
                     <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                 </template>
             </el-table-column>

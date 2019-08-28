@@ -148,7 +148,7 @@ type {{.Name}}Controller struct {
 func (this *{{.Name}}Controller) GetBy(id int64) *simple.JsonResult {
 	t := services.{{.Name}}Service.Get(id)
 	if t == nil {
-		return simple.ErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
+		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
 	}
 	return simple.JsonData(t)
 }
@@ -162,12 +162,12 @@ func (this *{{.Name}}Controller) PostCreate() *simple.JsonResult {
 	t := &model.{{.Name}}{}
 	err := this.Ctx.ReadForm(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 
 	err = services.{{.Name}}Service.Create(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(t)
 }
@@ -175,21 +175,21 @@ func (this *{{.Name}}Controller) PostCreate() *simple.JsonResult {
 func (this *{{.Name}}Controller) PostUpdate() *simple.JsonResult {
 	id, err := simple.FormValueInt64(this.Ctx, "id")
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	t := services.{{.Name}}Service.Get(id)
 	if t == nil {
-		return simple.ErrorMsg("entity not found")
+		return simple.JsonErrorMsg("entity not found")
 	}
 
 	err = this.Ctx.ReadForm(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 
 	err = services.{{.Name}}Service.Update(t)
 	if err != nil {
-		return simple.ErrorMsg(err.Error())
+		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(t)
 }
@@ -220,7 +220,7 @@ var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="id" label="编号"></el-table-column>
             {{range .Fields}}
-                <el-table-column prop="{{.CamelName}}" label="{{.CamelName}}"></el-table-column>
+			<el-table-column prop="{{.CamelName}}" label="{{.CamelName}}"></el-table-column>
             {{end}}
             <el-table-column label="操作" width="150">
                 <template scope="scope">
@@ -244,11 +244,11 @@ var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
 
         <!--新增界面-->
         <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
-            <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
+            <el-form :model="addForm" label-width="80px" ref="addForm">
                 {{range .Fields}}
-                    <el-form-item label="{{.CamelName}}" prop="rule">
-                        <el-input v-model="addForm.{{.CamelName}}"></el-input>
-                    </el-form-item>
+				<el-form-item label="{{.CamelName}}">
+					<el-input v-model="addForm.{{.CamelName}}"></el-input>
+				</el-form-item>
                 {{end}}
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -259,12 +259,12 @@ var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
 
         <!--编辑界面-->
         <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
-            <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
+            <el-form :model="editForm" label-width="80px"ref="editForm">
                 <el-input v-model="editForm.id" type="hidden"></el-input>
                 {{range .Fields}}
-                    <el-form-item label="{{.CamelName}}" prop="rule">
-                        <el-input v-model="editForm.{{.CamelName}}"></el-input>
-                    </el-form-item>
+				<el-form-item label="{{.CamelName}}">
+					<el-input v-model="editForm.{{.CamelName}}"></el-input>
+				</el-form-item>
                 {{end}}
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -290,21 +290,19 @@ var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
 
         addForm: {
           {{range .Fields}}
-            '{{.CamelName}}': '',
+          '{{.CamelName}}': '',
           {{end}}
         },
         addFormVisible: false,
-        addFormRules: {},
         addLoading: false,
 
         editForm: {
           'id': '',
           {{range .Fields}}
-            '{{.CamelName}}': '',
+          '{{.CamelName}}': '',
           {{end}}
         },
         editFormVisible: false,
-        editFormRules: {},
         editLoading: false,
       }
     },
@@ -385,7 +383,7 @@ var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 </style>
 

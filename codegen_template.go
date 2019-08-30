@@ -259,7 +259,7 @@ var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
 
         <!--编辑界面-->
         <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
-            <el-form :model="editForm" label-width="80px"ref="editForm">
+            <el-form :model="editForm" label-width="80px" ref="editForm">
                 <el-input v-model="editForm.id" type="hidden"></el-input>
                 {{range .Fields}}
 				<el-form-item label="{{.CamelName}}">

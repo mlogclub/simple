@@ -21,13 +21,17 @@ type DBConfiguration struct {
 var db *gorm.DB
 
 // 打开数据库
-func OpenDB(conf *DBConfiguration) *gorm.DB {
+func OpenDB(conf *DBConfiguration) (*gorm.DB, error) {
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
 		return "t_" + defaultTableName
 	}
 
 	var err error
-	db, err = gorm.Open(conf.Dialect, conf.Url)
+	db, err := gorm.Open(conf.Dialect, conf.Url)
+	if err != nil {
+		return nil, err
+	}
+
 	db.SingularTable(true)
 
 	maxIdle := 10

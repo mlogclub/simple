@@ -27,8 +27,7 @@ func OpenDB(conf *DBConfiguration) (*gorm.DB, error) {
 	}
 
 	var err error
-	db, err := gorm.Open(conf.Dialect, conf.Url)
-	if err != nil {
+	if db, err = gorm.Open(conf.Dialect, conf.Url); err != nil {
 		log.Errorf("opens database failed: %s", err.Error())
 		return nil, err
 	}

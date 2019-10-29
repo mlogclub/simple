@@ -29,6 +29,7 @@ func OpenDB(conf *DBConfiguration) (*gorm.DB, error) {
 	var err error
 	db, err := gorm.Open(conf.Dialect, conf.Url)
 	if err != nil {
+		log.Errorf("opens database failed: %s", err.Error())
 		return nil, err
 	}
 
@@ -48,9 +49,6 @@ func OpenDB(conf *DBConfiguration) (*gorm.DB, error) {
 
 	db.LogMode(conf.EnableLogModel)
 
-	if err != nil {
-		log.Errorf("opens database failed: %s", err.Error())
-	}
 	if len(conf.Models) > 0 {
 		if err = db.AutoMigrate(conf.Models...).Error; nil != err {
 			log.Errorf("auto migrate tables failed: %s", err.Error())

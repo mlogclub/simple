@@ -198,9 +198,9 @@ func (this *{{.Name}}Controller) PostUpdate() *simple.JsonResult {
 
 var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
 <template>
-    <section>
+    <section class="page-container">
         <!--工具条-->
-        <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+        <el-col :span="24" class="toolbar">
             <el-form :inline="true" :model="filters">
                 <el-form-item>
                     <el-input v-model="filters.name" placeholder="名称"></el-input>

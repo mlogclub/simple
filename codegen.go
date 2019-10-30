@@ -32,9 +32,9 @@ type InputData struct {
 
 func Generate(baseDir, pkgName string, models ...GenerateStruct) {
 	for _, model := range models {
-		if err := generateRepository(baseDir, pkgName, model); err != nil {
-			logrus.Error(err)
-		}
+		// if err := generateRepository(baseDir, pkgName, model); err != nil {
+		// 	logrus.Error(err)
+		// }
 		if err := generateService(baseDir, pkgName, model); err != nil {
 			logrus.Error(err)
 		}
@@ -68,26 +68,26 @@ func GetGenerateStruct(s interface{}) GenerateStruct {
 	}
 }
 
-func generateRepository(baseDir, pkgName string, s GenerateStruct) error {
-	var b bytes.Buffer
-	err := repositoryTmpl.Execute(&b, &InputData{
-		PkgName:   pkgName,
-		Name:      s.Name,
-		CamelName: strcase.ToLowerCamel(s.Name),
-		KebabName: strcase.ToKebab(s.Name),
-		Fields:    s.Fields,
-	})
-	if err != nil {
-		return err
-	}
-	c := b.String()
-
-	p, err := getFilePath(baseDir, "/repositories/"+strcase.ToSnake(s.Name+"_repository.go"))
-	if err != nil {
-		return err
-	}
-	return writeFile(p, c)
-}
+// func generateRepository(baseDir, pkgName string, s GenerateStruct) error {
+// 	var b bytes.Buffer
+// 	err := repositoryTmpl.Execute(&b, &InputData{
+// 		PkgName:   pkgName,
+// 		Name:      s.Name,
+// 		CamelName: strcase.ToLowerCamel(s.Name),
+// 		KebabName: strcase.ToKebab(s.Name),
+// 		Fields:    s.Fields,
+// 	})
+// 	if err != nil {
+// 		return err
+// 	}
+// 	c := b.String()
+//
+// 	p, err := getFilePath(baseDir, "/repositories/"+strcase.ToSnake(s.Name+"_repository.go"))
+// 	if err != nil {
+// 		return err
+// 	}
+// 	return writeFile(p, c)
+// }
 
 func generateService(baseDir, pkgName string, s GenerateStruct) error {
 	var b bytes.Buffer

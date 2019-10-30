@@ -10,13 +10,13 @@ import (
 	"github.com/mlogclub/simple"
 )
 
-var {{.Name}}Service = &{{.CamelName}}Service {}
+var {{.Name}}Service = &{{.CamelName}}Service{}
 
 type {{.CamelName}}Service struct {
 }
 
 func (this *{{.CamelName}}Service) Get(id int64) *model.{{.Name}} {
-	ret := &model.{{.Name}}{}
+	ret := &model.{{.Name}}{}query
 	if err := simple.DB().First(ret, "id = ?", id).Error; err != nil {
 		return nil
 	}
@@ -36,10 +36,10 @@ func (this *{{.CamelName}}Service) QueryCnd(cnd *simple.SqlCnd) (list []model.{{
 	return
 }
 
-func (this *{{.CamelName}}Service) Query(queries *simple.ParamQueries) (list []model.{{.Name}}, paging *simple.Paging) {
-	queries.StartQuery(simple.DB()).Find(&list)
-	queries.StartCount(simple.DB()).Model(&model.{{.Name}}{}).Count(&queries.Paging.Total)
-	paging = queries.Paging
+func (this *{{.CamelName}}Service) Query(params *simple.QueryParams) (list []model.{{.Name}}, paging *simple.Paging) {
+	params.StartQuery(simple.DB()).Find(&list)
+	params.StartCount(simple.DB()).Model(&model.{{.Name}}{}).Count(&params.Paging.Total)
+	paging = params.Paging
 	return
 }
 
@@ -103,7 +103,7 @@ func (this *{{.Name}}Controller) PostCreate() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
-	err = services.{{.Name}}Service.Create(t)
+	t, err = services.{{.Name}}Service.Create(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

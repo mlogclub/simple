@@ -41,7 +41,7 @@ func (this *{{.CamelName}}Repository) SqlCnd(db *gorm.DB, cnd *simple.SqlCnd) (l
 	return
 }
 
-func (this *{{.CamelName}}Repository) Query(db *gorm.DB, queries *simple.ParamQueries) (list []model.{{.Name}}, paging *simple.Paging) {
+func (this *{{.CamelName}}Repository) Query(db *gorm.DB, queries *simple.QueryParams) (list []model.{{.Name}}, paging *simple.Paging) {
 	queries.StartQuery(db).Find(&list)
     queries.StartCount(db).Model(&model.{{.Name}}{}).Count(&queries.Paging.Total)
 	paging = queries.Paging
@@ -104,7 +104,7 @@ func (this *{{.CamelName}}Service) SqlCnd(cnd *simple.SqlCnd) (list []model.{{.N
 	return repositories.{{.Name}}Repository.SqlCnd(simple.DB(), cnd)
 }
 
-func (this *{{.CamelName}}Service) Query(queries *simple.ParamQueries) (list []model.{{.Name}}, paging *simple.Paging) {
+func (this *{{.CamelName}}Service) Query(queries *simple.QueryParams) (list []model.{{.Name}}, paging *simple.Paging) {
 	return repositories.{{.Name}}Repository.Query(simple.DB(), queries)
 }
 
@@ -154,7 +154,7 @@ func (this *{{.Name}}Controller) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *{{.Name}}Controller) AnyList() *simple.JsonResult {
-	list, paging := services.{{.Name}}Service.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.{{.Name}}Service.Query(simple.NewQueryParams(this.Ctx).PageAuto().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 

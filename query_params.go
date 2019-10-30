@@ -7,15 +7,15 @@ import (
 	"github.com/mlogclub/simple/strcase"
 )
 
-type ParamQueries struct {
+type QueryParams struct {
 	Ctx         iris.Context
 	Queries     []queryPair  // 条件
 	OrderByCols []OrderByCol // 排序
 	Paging      *Paging      // 分页
 }
 
-func NewParamQueries(ctx iris.Context) *ParamQueries {
-	return &ParamQueries{
+func NewQueryParams(ctx iris.Context) *QueryParams {
+	return &QueryParams{
 		Ctx: ctx,
 	}
 }
@@ -25,17 +25,17 @@ type queryPair struct {
 	Args  []interface{} // 参数
 }
 
-func (o *ParamQueries) value(column string) string {
+func (o *QueryParams) value(column string) string {
 	name := strcase.ToLowerCamel(column)
 	return o.Ctx.FormValue(name)
 }
 
-func (o *ParamQueries) Eq(column string, args ...interface{}) *ParamQueries {
+func (o *QueryParams) Eq(column string, args ...interface{}) *QueryParams {
 	o.Where(column+" = ?", args)
 	return o
 }
 
-func (o *ParamQueries) EqAuto(column string) *ParamQueries {
+func (o *QueryParams) EqAuto(column string) *QueryParams {
 	value := o.value(column)
 	if len(value) > 0 {
 		return o.Eq(column, value)
@@ -43,12 +43,12 @@ func (o *ParamQueries) EqAuto(column string) *ParamQueries {
 	return o
 }
 
-func (o *ParamQueries) NotEq(column string, args ...interface{}) *ParamQueries {
+func (o *QueryParams) NotEq(column string, args ...interface{}) *QueryParams {
 	o.Where(column+" <> ?", args)
 	return o
 }
 
-func (o *ParamQueries) NotEqAuto(column string) *ParamQueries {
+func (o *QueryParams) NotEqAuto(column string) *QueryParams {
 	value := o.value(column)
 	if len(value) > 0 {
 		return o.NotEq(column, value)
@@ -56,12 +56,12 @@ func (o *ParamQueries) NotEqAuto(column string) *ParamQueries {
 	return o
 }
 
-func (o *ParamQueries) Gt(column string, args ...interface{}) *ParamQueries {
+func (o *QueryParams) Gt(column string, args ...interface{}) *QueryParams {
 	o.Where(column+" > ?", args)
 	return o
 }
 
-func (o *ParamQueries) GtAuto(column string) *ParamQueries {
+func (o *QueryParams) GtAuto(column string) *QueryParams {
 	value := o.value(column)
 	if len(value) > 0 {
 		return o.Gt(column, value)
@@ -69,12 +69,12 @@ func (o *ParamQueries) GtAuto(column string) *ParamQueries {
 	return o
 }
 
-func (o *ParamQueries) Gte(column string, args ...interface{}) *ParamQueries {
+func (o *QueryParams) Gte(column string, args ...interface{}) *QueryParams {
 	o.Where(column+" >= ?", args)
 	return o
 }
 
-func (o *ParamQueries) GteAuto(column string) *ParamQueries {
+func (o *QueryParams) GteAuto(column string) *QueryParams {
 	value := o.value(column)
 	if len(value) > 0 {
 		return o.Gte(column, value)
@@ -82,12 +82,12 @@ func (o *ParamQueries) GteAuto(column string) *ParamQueries {
 	return o
 }
 
-func (o *ParamQueries) Lt(column string, args ...interface{}) *ParamQueries {
+func (o *QueryParams) Lt(column string, args ...interface{}) *QueryParams {
 	o.Where(column+" < ?", args)
 	return o
 }
 
-func (o *ParamQueries) LtAuto(column string) *ParamQueries {
+func (o *QueryParams) LtAuto(column string) *QueryParams {
 	value := o.value(column)
 	if len(value) > 0 {
 		return o.Lt(column, value)
@@ -95,12 +95,12 @@ func (o *ParamQueries) LtAuto(column string) *ParamQueries {
 	return o
 }
 
-func (o *ParamQueries) Lte(column string, args ...interface{}) *ParamQueries {
+func (o *QueryParams) Lte(column string, args ...interface{}) *QueryParams {
 	o.Where(column+" <= ?", args)
 	return o
 }
 
-func (o *ParamQueries) LteAuto(column string) *ParamQueries {
+func (o *QueryParams) LteAuto(column string) *QueryParams {
 	value := o.value(column)
 	if len(value) > 0 {
 		return o.Lte(column, value)
@@ -108,12 +108,12 @@ func (o *ParamQueries) LteAuto(column string) *ParamQueries {
 	return o
 }
 
-func (o *ParamQueries) Like(column string, str string) *ParamQueries {
+func (o *QueryParams) Like(column string, str string) *QueryParams {
 	o.Where(column+" like ?", "%"+str+"%")
 	return o
 }
 
-func (o *ParamQueries) LikeAuto(column string) *ParamQueries {
+func (o *QueryParams) LikeAuto(column string) *QueryParams {
 	value := o.value(column)
 	if len(value) > 0 {
 		return o.Like(column, value)
@@ -121,30 +121,30 @@ func (o *ParamQueries) LikeAuto(column string) *ParamQueries {
 	return o
 }
 
-func (o *ParamQueries) Where(query string, args ...interface{}) *ParamQueries {
+func (o *QueryParams) Where(query string, args ...interface{}) *QueryParams {
 	o.Queries = append(o.Queries, queryPair{query, args})
 	return o
 }
 
-func (o *ParamQueries) Asc(column string) *ParamQueries {
+func (o *QueryParams) Asc(column string) *QueryParams {
 	return o.OrderBy(column, true)
 }
 
-func (o *ParamQueries) Desc(column string) *ParamQueries {
+func (o *QueryParams) Desc(column string) *QueryParams {
 	return o.OrderBy(column, false)
 }
 
-func (o *ParamQueries) OrderBy(column string, asc bool) *ParamQueries {
+func (o *QueryParams) OrderBy(column string, asc bool) *QueryParams {
 	o.OrderByCols = append(o.OrderByCols, OrderByCol{Column: column, Asc: asc})
 	return o
 }
 
-func (o *ParamQueries) Limit(limit int) *ParamQueries {
+func (o *QueryParams) Limit(limit int) *QueryParams {
 	o.Page(1, limit)
 	return o
 }
 
-func (o *ParamQueries) Page(page, limit int) *ParamQueries {
+func (o *QueryParams) Page(page, limit int) *QueryParams {
 	if o.Paging == nil {
 		o.Paging = &Paging{Page: page, Limit: limit}
 	} else {
@@ -154,12 +154,12 @@ func (o *ParamQueries) Page(page, limit int) *ParamQueries {
 	return o
 }
 
-func (o *ParamQueries) PageAuto() *ParamQueries {
+func (o *QueryParams) PageAuto() *QueryParams {
 	paging := GetPaging(o.Ctx)
 	return o.Page(paging.Page, paging.Limit)
 }
 
-func (o *ParamQueries) StartQuery(db *gorm.DB) *gorm.DB {
+func (o *QueryParams) StartQuery(db *gorm.DB) *gorm.DB {
 	retDb := db
 
 	// where
@@ -193,7 +193,7 @@ func (o *ParamQueries) StartQuery(db *gorm.DB) *gorm.DB {
 	return retDb
 }
 
-func (o *ParamQueries) StartCount(db *gorm.DB) *gorm.DB {
+func (o *QueryParams) StartCount(db *gorm.DB) *gorm.DB {
 	retDb := db
 
 	// where

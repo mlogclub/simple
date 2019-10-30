@@ -36,8 +36,8 @@ func (this *{{.CamelName}}Repository) Take(db *gorm.DB, where ...interface{}) *m
 	return ret
 }
 
-func (this *{{.CamelName}}Repository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.{{.Name}}, err error) {
-	err = cnd.DoQuery(db).Find(&list).Error
+func (this *{{.CamelName}}Repository) SqlCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.{{.Name}}, err error) {
+	err = cnd.Exec(db).Find(&list).Error
 	return
 }
 
@@ -100,8 +100,8 @@ func (this *{{.CamelName}}Service) Take(where ...interface{}) *model.{{.Name}} {
 	return repositories.{{.Name}}Repository.Take(simple.DB(), where...)
 }
 
-func (this *{{.CamelName}}Service) QueryCnd(cnd *simple.QueryCnd) (list []model.{{.Name}}, err error) {
-	return repositories.{{.Name}}Repository.QueryCnd(simple.DB(), cnd)
+func (this *{{.CamelName}}Service) SqlCnd(cnd *simple.SqlCnd) (list []model.{{.Name}}, err error) {
+	return repositories.{{.Name}}Repository.SqlCnd(simple.DB(), cnd)
 }
 
 func (this *{{.CamelName}}Service) Query(queries *simple.ParamQueries) (list []model.{{.Name}}, paging *simple.Paging) {

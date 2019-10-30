@@ -2,58 +2,40 @@ package simple
 
 import (
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	log "github.com/sirupsen/logrus"
 )
 
 type GormModel struct {
-	Id int64 `gorm:"PRIMARY_KEY;AUTO_INCREMENT" json:"id"`
-}
-
-type DBConfiguration struct {
-	Dialect        string
-	Url            string
-	MaxIdle        int
-	MaxActive      int
-	EnableLogModel bool
-	Models         []interface{}
+	Id int64 `gorm:"PRIMARY_KEY;AUTO_INCREMENT" json:"id" form:"id"`
 }
 
 var db *gorm.DB
 
-// 打开数据库
-func OpenDB(conf *DBConfiguration) (*gorm.DB, error) {
+func OpenDB(url string, maxIdleConns, maxOpenConns int, enableLog bool, models ...interface{}) (err error) {
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
 		return "t_" + defaultTableName
 	}
 
-	var err error
-	if db, err = gorm.Open(conf.Dialect, conf.Url); err != nil {
+	if db, err = gorm.Open("mysql", url); err != nil {
 		log.Errorf("opens database failed: %s", err.Error())
-		return nil, err
+		return
 	}
 
-	db.SingularTable(true)
+	db.LogMode(enableLog)
+	db.SingularTable(true) // 禁用表名负数
+	db.DB().SetMaxIdleConns(maxIdleConns)
+	db.DB().SetMaxOpenConns(maxOpenConns)
 
-	maxIdle := 10
-	if conf.MaxIdle > 0 {
-		maxIdle = conf.MaxIdle
+	if err = db.AutoMigrate(models...).Error; nil != err {
+		log.Errorf("auto migrate tables failed: %s", err.Error())
 	}
-	db.DB().SetMaxIdleConns(maxIdle)
+	return
+}
 
-	maxActive := 50
-	if conf.MaxActive > 0 {
-		maxActive = conf.MaxActive
-	}
-	db.DB().SetMaxOpenConns(maxActive)
-
-	db.LogMode(conf.EnableLogModel)
-
-	if len(conf.Models) > 0 {
-		if err = db.AutoMigrate(conf.Models...).Error; nil != err {
-			log.Errorf("auto migrate tables failed: %s", err.Error())
-		}
-	}
-	return db, nil
+// 获取数据库链接
+func DB() *gorm.DB {
+	return db
 }
 
 // 关闭连接
@@ -64,11 +46,6 @@ func CloseDB() {
 	if err := db.Close(); nil != err {
 		log.Errorf("Disconnect from database failed: %s", err.Error())
 	}
-}
-
-// 获取数据库链接
-func GetDB() *gorm.DB {
-	return db
 }
 
 // 事务环绕

@@ -93,39 +93,39 @@ type {{.CamelName}}Service struct {
 }
 
 func (this *{{.CamelName}}Service) Get(id int64) *model.{{.Name}} {
-	return repositories.{{.Name}}Repository.Get(simple.GetDB(), id)
+	return repositories.{{.Name}}Repository.Get(simple.DB(), id)
 }
 
 func (this *{{.CamelName}}Service) Take(where ...interface{}) *model.{{.Name}} {
-	return repositories.{{.Name}}Repository.Take(simple.GetDB(), where...)
+	return repositories.{{.Name}}Repository.Take(simple.DB(), where...)
 }
 
 func (this *{{.CamelName}}Service) QueryCnd(cnd *simple.QueryCnd) (list []model.{{.Name}}, err error) {
-	return repositories.{{.Name}}Repository.QueryCnd(simple.GetDB(), cnd)
+	return repositories.{{.Name}}Repository.QueryCnd(simple.DB(), cnd)
 }
 
 func (this *{{.CamelName}}Service) Query(queries *simple.ParamQueries) (list []model.{{.Name}}, paging *simple.Paging) {
-	return repositories.{{.Name}}Repository.Query(simple.GetDB(), queries)
+	return repositories.{{.Name}}Repository.Query(simple.DB(), queries)
 }
 
 func (this *{{.CamelName}}Service) Create(t *model.{{.Name}}) error {
-	return repositories.{{.Name}}Repository.Create(simple.GetDB(), t)
+	return repositories.{{.Name}}Repository.Create(simple.DB(), t)
 }
 
 func (this *{{.CamelName}}Service) Update(t *model.{{.Name}}) error {
-	return repositories.{{.Name}}Repository.Update(simple.GetDB(), t)
+	return repositories.{{.Name}}Repository.Update(simple.DB(), t)
 }
 
 func (this *{{.CamelName}}Service) Updates(id int64, columns map[string]interface{}) error {
-	return repositories.{{.Name}}Repository.Updates(simple.GetDB(), id, columns)
+	return repositories.{{.Name}}Repository.Updates(simple.DB(), id, columns)
 }
 
 func (this *{{.CamelName}}Service) UpdateColumn(id int64, name string, value interface{}) error {
-	return repositories.{{.Name}}Repository.UpdateColumn(simple.GetDB(), id, name, value)
+	return repositories.{{.Name}}Repository.UpdateColumn(simple.DB(), id, name, value)
 }
 
 func (this *{{.CamelName}}Service) Delete(id int64) {
-	repositories.{{.Name}}Repository.Delete(simple.GetDB(), id)
+	repositories.{{.Name}}Repository.Delete(simple.DB(), id)
 }
 
 `))

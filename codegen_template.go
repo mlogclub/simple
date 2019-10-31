@@ -42,7 +42,7 @@ func (this *{{.CamelName}}Repository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd
 }
 
 func (this *{{.CamelName}}Repository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.{{.Name}}, paging *simple.Paging) {
-	params.StartQuery(db).Find(&list)
+	params.Query(db).Find(&list)
     params.StartCount(db).Model(&model.{{.Name}}{}).Count(&params.Paging.Total)
 	paging = params.Paging
 	return

@@ -9,7 +9,7 @@ import (
 
 type QueryParams struct {
 	Ctx         iris.Context
-	Queries     []queryPair  // 条件
+	Params      []ParamPair  // 条件
 	OrderByCols []OrderByCol // 排序
 	Paging      *Paging      // 分页
 }
@@ -18,11 +18,6 @@ func NewQueryParams(ctx iris.Context) *QueryParams {
 	return &QueryParams{
 		Ctx: ctx,
 	}
-}
-
-type queryPair struct {
-	Query string        // 查询
-	Args  []interface{} // 参数
 }
 
 func (o *QueryParams) value(column string) string {
@@ -122,7 +117,7 @@ func (o *QueryParams) LikeAuto(column string) *QueryParams {
 }
 
 func (o *QueryParams) Where(query string, args ...interface{}) *QueryParams {
-	o.Queries = append(o.Queries, queryPair{query, args})
+	o.Params = append(o.Params, ParamPair{query, args})
 	return o
 }
 
@@ -159,49 +154,49 @@ func (o *QueryParams) PageAuto() *QueryParams {
 	return o.Page(paging.Page, paging.Limit)
 }
 
-func (o *QueryParams) StartQuery(db *gorm.DB) *gorm.DB {
-	retDb := db
+func (o *QueryParams) Query(db *gorm.DB) *gorm.DB {
+	ret := db
 
 	// where
-	if len(o.Queries) > 0 {
-		for _, query := range o.Queries {
-			retDb = retDb.Where(query.Query, query.Args...)
+	if len(o.Params) > 0 {
+		for _, param := range o.Params {
+			ret = ret.Where(param.Query, param.Args...)
 		}
 	}
 
 	// order by
 	if len(o.OrderByCols) > 0 {
-		for _, sort := range o.OrderByCols {
-			if sort.Asc {
-				retDb = retDb.Order(sort.Column + " asc")
+		for _, order := range o.OrderByCols {
+			if order.Asc {
+				ret = ret.Order(order.Column + " ASC")
 			} else {
-				retDb = retDb.Order(sort.Column + " desc")
+				ret = ret.Order(order.Column + " DESC")
 			}
 		}
 	}
 
 	// limit
 	if o.Paging != nil && o.Paging.Limit > 0 {
-		retDb = retDb.Limit(o.Paging.Limit)
+		ret = ret.Limit(o.Paging.Limit)
 	}
 
 	// offset
 	if o.Paging != nil && o.Paging.Offset() > 0 {
-		retDb = retDb.Offset(o.Paging.Offset())
+		ret = ret.Offset(o.Paging.Offset())
 	}
 
-	return retDb
+	return ret
 }
 
-func (o *QueryParams) StartCount(db *gorm.DB) *gorm.DB {
-	retDb := db
+func (o *QueryParams) Count(db *gorm.DB) *gorm.DB {
+	ret := db
 
 	// where
-	if len(o.Queries) > 0 {
-		for _, query := range o.Queries {
-			retDb = retDb.Where(query.Query, query.Args...)
+	if len(o.Params) > 0 {
+		for _, query := range o.Params {
+			ret = ret.Where(query.Query, query.Args...)
 		}
 	}
 
-	return retDb
+	return ret
 }

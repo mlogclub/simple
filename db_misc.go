@@ -28,6 +28,11 @@ func (p *Paging) TotalPage() int {
 	return totalPage
 }
 
+type ParamPair struct {
+	Query string        // 查询
+	Args  []interface{} // 参数
+}
+
 // 排序信息
 type OrderByCol struct {
 	Column string // 排序字段

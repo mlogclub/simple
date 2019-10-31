@@ -77,7 +77,7 @@ func (s *SqlCnd) Page(page, limit int) *SqlCnd {
 	return s
 }
 
-func (s *SqlCnd) Query(db *gorm.DB) *gorm.DB {
+func (s *SqlCnd) Build(db *gorm.DB) *gorm.DB {
 	ret := db
 
 	// where
@@ -110,8 +110,16 @@ func (s *SqlCnd) Query(db *gorm.DB) *gorm.DB {
 	return ret
 }
 
-func (s *SqlCnd) Count(db *gorm.DB) *gorm.DB {
-	ret := db
+func (s *SqlCnd) Find(db *gorm.DB, out interface{}) {
+	s.Build(db).Find(out)
+}
+
+func (s *SqlCnd) FindOne(db *gorm.DB, out interface{}) {
+	s.Limit(1).Build(db).Find(out)
+}
+
+func (s *SqlCnd) Count(db *gorm.DB, model interface{}) int64 {
+	ret := db.Model(model)
 
 	// where
 	if len(s.Params) > 0 {
@@ -120,5 +128,7 @@ func (s *SqlCnd) Count(db *gorm.DB) *gorm.DB {
 		}
 	}
 
-	return ret
+	var count int64
+	ret.Count(&count)
+	return count
 }

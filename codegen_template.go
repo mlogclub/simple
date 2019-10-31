@@ -2,68 +2,130 @@ package simple
 
 import "html/template"
 
+var repositoryTmpl = template.Must(template.New("repository").Parse(`
+package repositories
+
+import (
+	"{{.PkgName}}/model"
+	"github.com/mlogclub/simple"
+	"github.com/jinzhu/gorm"
+)
+
+var {{.Name}}Repository = new{{.Name}}Repository()
+
+func new{{.Name}}Repository() *{{.CamelName}}Repository {
+	return &{{.CamelName}}Repository{}
+}
+
+type {{.CamelName}}Repository struct {
+}
+
+func (this *{{.CamelName}}Repository) Get(db *gorm.DB, id int64) *model.{{.Name}} {
+	ret := &model.{{.Name}}{}
+	if err := db.First(ret, "id = ?", id).Error; err != nil {
+		return nil
+	}
+	return ret
+}
+
+func (this *{{.CamelName}}Repository) Take(db *gorm.DB, where ...interface{}) *model.{{.Name}} {
+	ret := &model.{{.Name}}{}
+	if err := db.Take(ret, where...).Error; err != nil {
+		return nil
+	}
+	return ret
+}
+
+func (this *{{.CamelName}}Repository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.{{.Name}}, err error) {
+	err = cnd.DoQuery(db).Find(&list).Error
+	return
+}
+
+func (this *{{.CamelName}}Repository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.{{.Name}}, paging *simple.Paging) {
+	params.StartQuery(db).Find(&list)
+    params.StartCount(db).Model(&model.{{.Name}}{}).Count(&params.Paging.Total)
+	paging = params.Paging
+	return
+}
+
+func (this *{{.CamelName}}Repository) Create(db *gorm.DB, t *model.{{.Name}}) (err error) {
+	err = db.Create(t).Error
+	return
+}
+
+func (this *{{.CamelName}}Repository) Update(db *gorm.DB, t *model.{{.Name}}) (err error) {
+	err = db.Save(t).Error
+	return
+}
+
+func (this *{{.CamelName}}Repository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
+	err = db.Model(&model.{{.Name}}{}).Where("id = ?", id).Updates(columns).Error
+	return
+}
+
+func (this *{{.CamelName}}Repository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
+	err = db.Model(&model.{{.Name}}{}).Where("id = ?", id).UpdateColumn(name, value).Error
+	return
+}
+
+func (this *{{.CamelName}}Repository) Delete(db *gorm.DB, id int64) {
+	db.Delete(&model.{{.Name}}{}, "id = ?", id)
+}
+
+`))
+
 var serviceTmpl = template.Must(template.New("service").Parse(`
 package services
 
 import (
 	"{{.PkgName}}/model"
+	"{{.PkgName}}/repositories"
 	"github.com/mlogclub/simple"
 )
 
-var {{.Name}}Service = &{{.CamelName}}Service{}
+var {{.Name}}Service = new{{.Name}}Service()
+
+func new{{.Name}}Service() *{{.CamelName}}Service {
+	return &{{.CamelName}}Service {}
+}
 
 type {{.CamelName}}Service struct {
 }
 
 func (this *{{.CamelName}}Service) Get(id int64) *model.{{.Name}} {
-	ret := &model.{{.Name}}{}query
-	if err := simple.DB().First(ret, "id = ?", id).Error; err != nil {
-		return nil
-	}
-	return ret
+	return repositories.{{.Name}}Repository.Get(simple.GetDB(), id)
 }
 
 func (this *{{.CamelName}}Service) Take(where ...interface{}) *model.{{.Name}} {
-	ret := &model.{{.Name}}{}
-	if err := simple.DB().Take(ret, where...).Error; err != nil {
-		return nil
-	}
-	return ret
+	return repositories.{{.Name}}Repository.Take(simple.GetDB(), where...)
 }
 
-func (this *{{.CamelName}}Service) QueryCnd(cnd *simple.SqlCnd) (list []model.{{.Name}}, err error) {
-	err = cnd.Exec(simple.DB()).Find(&list).Error
-	return
+func (this *{{.CamelName}}Service) QueryCnd(cnd *simple.QueryCnd) (list []model.{{.Name}}, err error) {
+	return repositories.{{.Name}}Repository.QueryCnd(simple.GetDB(), cnd)
 }
 
-func (this *{{.CamelName}}Service) Query(params *simple.QueryParams) (list []model.{{.Name}}, paging *simple.Paging) {
-	params.StartQuery(simple.DB()).Find(&list)
-	params.StartCount(simple.DB()).Model(&model.{{.Name}}{}).Count(&params.Paging.Total)
-	paging = params.Paging
-	return
+func (this *{{.CamelName}}Service) Query(queries *simple.QueryParams) (list []model.{{.Name}}, paging *simple.Paging) {
+	return repositories.{{.Name}}Repository.Query(simple.GetDB(), queries)
 }
 
-func (this *{{.CamelName}}Service) Create(t *model.{{.Name}}) (*model.{{.Name}}, error) {
-	if err := simple.DB().Create(t).Error; err != nil {
-		return nil, err
-	}
-	return t, nil
+func (this *{{.CamelName}}Service) Create(t *model.{{.Name}}) error {
+	return repositories.{{.Name}}Repository.Create(simple.GetDB(), t)
 }
 
 func (this *{{.CamelName}}Service) Update(t *model.{{.Name}}) error {
-	return simple.DB().Save(t).Error
+	return repositories.{{.Name}}Repository.Update(simple.GetDB(), t)
 }
 
 func (this *{{.CamelName}}Service) Updates(id int64, columns map[string]interface{}) error {
-	return simple.DB().Model(&model.{{.Name}}{}).Where("id = ?", id).Updates(columns).Error
+	return repositories.{{.Name}}Repository.Updates(simple.GetDB(), id, columns)
 }
 
 func (this *{{.CamelName}}Service) UpdateColumn(id int64, name string, value interface{}) error {
-	return simple.DB().Model(&model.{{.Name}}{}).Where("id = ?", id).UpdateColumn(name, value).Error
+	return repositories.{{.Name}}Repository.UpdateColumn(simple.GetDB(), id, name, value)
 }
 
-func (this *{{.CamelName}}Service) Delete(id int64) error {
-	return simple.DB().Delete(&model.{{.Name}}{}, "id = ?", id).Error
+func (this *{{.CamelName}}Service) Delete(id int64) {
+	repositories.{{.Name}}Repository.Delete(simple.GetDB(), id)
 }
 
 `))
@@ -92,7 +154,7 @@ func (this *{{.Name}}Controller) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *{{.Name}}Controller) AnyList() *simple.JsonResult {
-	list, paging := services.{{.Name}}Service.Query(simple.NewQueryParams(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.{{.Name}}Service.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
@@ -103,7 +165,7 @@ func (this *{{.Name}}Controller) PostCreate() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 
-	t, err = services.{{.Name}}Service.Create(t)
+	err = services.{{.Name}}Service.Create(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

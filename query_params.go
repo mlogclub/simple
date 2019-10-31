@@ -110,6 +110,6 @@ func (q *QueryParams) FindOne(db *gorm.DB, out interface{}) error {
 	return q.Cnd.FindOne(db, out)
 }
 
-func (q *QueryParams) Count(db *gorm.DB, model interface{}) (int64, error) {
+func (q *QueryParams) Count(db *gorm.DB, model interface{}) (int, error) {
 	return q.Cnd.Count(db, model)
 }

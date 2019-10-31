@@ -118,7 +118,7 @@ func (s *SqlCnd) FindOne(db *gorm.DB, out interface{}) error {
 	return s.Limit(1).Build(db).Find(out).Error
 }
 
-func (s *SqlCnd) Count(db *gorm.DB, model interface{}) (int64, error) {
+func (s *SqlCnd) Count(db *gorm.DB, model interface{}) (int, error) {
 	ret := db.Model(model)
 
 	// where
@@ -128,7 +128,7 @@ func (s *SqlCnd) Count(db *gorm.DB, model interface{}) (int64, error) {
 		}
 	}
 
-	var count int64
+	var count int
 	err := ret.Count(&count).Error
 	return count, err
 }

@@ -26,15 +26,15 @@ func TestQueryParams(t *testing.T) {
 		panic(err)
 	}
 	var users []User
-	NewQueryParams(nil).Desc("id").Find(DB(), &users)
+	_ = NewQueryParams(nil).Desc("id").Find(DB(), &users)
 
 	fmt.Println(FormatJson(users))
 
 	var user User
-	NewQueryParams(nil).Desc("id").FindOne(DB(), &user)
+	_ = NewQueryParams(nil).Desc("id").FindOne(DB(), &user)
 	fmt.Println(FormatJson(user))
 
-	count := NewQueryParams(nil).Desc("id").Count(DB(), &User{})
+	count, _ := NewQueryParams(nil).Desc("id").Count(DB(), &User{})
 	fmt.Println(count)
 
 	// params.Query(db).Find(&list)

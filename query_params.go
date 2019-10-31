@@ -89,3 +89,28 @@ func (q *QueryParams) PageByReq() *QueryParams {
 	q.Page(paging.Page, paging.Limit)
 	return q
 }
+
+func (q *QueryParams) Asc(column string) *QueryParams {
+	q.Orders = append(q.Orders, OrderByCol{Column: column, Asc: true})
+	return q
+}
+
+func (q *QueryParams) Desc(column string) *QueryParams {
+	q.Orders = append(q.Orders, OrderByCol{Column: column, Asc: false})
+	return q
+}
+
+func (q *QueryParams) Limit(limit int) *QueryParams {
+	q.Page(1, limit)
+	return q
+}
+
+func (q *QueryParams) Page(page, limit int) *QueryParams {
+	if q.Paging == nil {
+		q.Paging = &Paging{Page: page, Limit: limit}
+	} else {
+		q.Paging.Page = page
+		q.Paging.Limit = limit
+	}
+	return q
+}

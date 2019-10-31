@@ -24,7 +24,7 @@ func (this *UrlBuilder) GetQuery() url.Values {
 }
 
 func (this *UrlBuilder) GetURL() *url.URL {
-    return this.u
+	return this.u
 }
 
 func (this *UrlBuilder) Build() *url.URL {

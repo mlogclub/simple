@@ -92,5 +92,3 @@ func PrettyTime(timestamp int64) string {
 		return TimeFormat(_time, FMT_DATE)
 	}
 }
-
-

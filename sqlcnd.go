@@ -110,15 +110,15 @@ func (s *SqlCnd) Build(db *gorm.DB) *gorm.DB {
 	return ret
 }
 
-func (s *SqlCnd) Find(db *gorm.DB, out interface{}) {
-	s.Build(db).Find(out)
+func (s *SqlCnd) Find(db *gorm.DB, out interface{}) error {
+	return s.Build(db).Find(out).Error
 }
 
-func (s *SqlCnd) FindOne(db *gorm.DB, out interface{}) {
-	s.Limit(1).Build(db).Find(out)
+func (s *SqlCnd) FindOne(db *gorm.DB, out interface{}) error {
+	return s.Limit(1).Build(db).Find(out).Error
 }
 
-func (s *SqlCnd) Count(db *gorm.DB, model interface{}) int64 {
+func (s *SqlCnd) Count(db *gorm.DB, model interface{}) (int64, error) {
 	ret := db.Model(model)
 
 	// where
@@ -129,6 +129,6 @@ func (s *SqlCnd) Count(db *gorm.DB, model interface{}) int64 {
 	}
 
 	var count int64
-	ret.Count(&count)
-	return count
+	err := ret.Count(&count).Error
+	return count, err
 }

@@ -102,14 +102,14 @@ func (q *QueryParams) Page() *QueryParams {
 	return q
 }
 
-func (q *QueryParams) Find(db *gorm.DB, out interface{}) {
-	q.Cnd.Find(db, out)
+func (q *QueryParams) Find(db *gorm.DB, out interface{}) error {
+	return q.Cnd.Find(db, out)
 }
 
-func (q *QueryParams) FindOne(db *gorm.DB, out interface{}) {
-	q.Cnd.FindOne(db, out)
+func (q *QueryParams) FindOne(db *gorm.DB, out interface{}) error {
+	return q.Cnd.FindOne(db, out)
 }
 
-func (q *QueryParams) Count(db *gorm.DB, model interface{}) int64 {
+func (q *QueryParams) Count(db *gorm.DB, model interface{}) (int64, error) {
 	return q.Cnd.Count(db, model)
 }

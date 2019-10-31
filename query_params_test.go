@@ -2,7 +2,6 @@ package simple
 
 import (
 	"database/sql"
-	"fmt"
 	"testing"
 )
 
@@ -25,17 +24,15 @@ func TestQueryParams(t *testing.T) {
 	if err := OpenDB("root:123456@tcp(localhost:3306)/mlog_db2?charset=utf8mb4&parseTime=True&loc=Local", 5, 20, true); err != nil {
 		panic(err)
 	}
-	var users []User
-	_ = NewQueryParams(nil).Desc("id").Find(DB(), &users)
-
-	fmt.Println(FormatJson(users))
+	// var users []User
+	// _ = NewQueryParams(nil).Desc("id").Find(DB(), &users)
+	// fmt.Println(FormatJson(users))
 
 	var user User
 	_ = NewQueryParams(nil).Desc("id").FindOne(DB(), &user)
-	fmt.Println(FormatJson(user))
 
-	count, _ := NewQueryParams(nil).Desc("id").Count(DB(), &User{})
-	fmt.Println(count)
+	// count, _ := NewQueryParams(nil).Desc("id").Count(DB(), &User{})
+	// fmt.Println(count)
 
 	// params.Query(db).Find(&list)
 	// params.Count(db).Model(&model.Article{}).Count(&params.Paging.Total)

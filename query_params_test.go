@@ -25,5 +25,6 @@ func TestQueryParams(t *testing.T) {
 		panic(err)
 	}
 	var users []User
-	NewQueryParams(nil).Eq("username").PageAuto().Desc("id").Query(DB()).Find(&users)
+	NewQueryParams(nil).Eq("username").Page().Desc("id").Query(DB()).Find(&users)
+	NewSqlCnd().Where("username = ? or email = ?", "username", "email").Where("password = ?", 123).Query(DB()).Find(&users)
 }

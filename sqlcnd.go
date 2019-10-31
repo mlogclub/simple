@@ -8,10 +8,8 @@ type SqlCnd struct {
 	Paging *Paging
 }
 
-func NewSqlCnd(query string, args ...interface{}) *SqlCnd {
-	q := &SqlCnd{}
-	q.Where(query, args)
-	return q
+func NewSqlCnd() *SqlCnd {
+	return &SqlCnd{}
 }
 
 func (s *SqlCnd) Eq(column string, args ...interface{}) *SqlCnd {

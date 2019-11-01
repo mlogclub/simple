@@ -36,15 +36,30 @@ func (this *{{.CamelName}}Repository) Take(db *gorm.DB, where ...interface{}) *m
 	return ret
 }
 
-func (this *{{.CamelName}}Repository) QueryCnd(db *gorm.DB, cnd *simple.QueryCnd) (list []model.{{.Name}}, err error) {
-	err = cnd.DoQuery(db).Find(&list).Error
+func (this *{{.CamelName}}Repository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.{{.Name}}, err error) {
+	err = cnd.Find(db, &list)
 	return
 }
 
-func (this *{{.CamelName}}Repository) Query(db *gorm.DB, params *simple.QueryParams) (list []model.{{.Name}}, paging *simple.Paging) {
-	params.Query(db).Find(&list)
-    params.StartCount(db).Model(&model.{{.Name}}{}).Count(&params.Paging.Total)
-	paging = params.Paging
+func (this *{{.CamelName}}Repository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.{{.Name}}, paging *simple.Paging) {
+	return this.FindPageByCnd(db, &params.SqlCnd)
+}
+
+func (this *{{.CamelName}}Repository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.{{.Name}}, paging *simple.Paging) {
+	err := cnd.Find(db, &list)
+	if err != nil {
+		return
+	}
+
+	count, err := cnd.Count(db, &model.{{.Name}}{})
+	if err != nil {
+		return
+	}
+	paging = &simple.Paging{
+		Page:  cnd.Paging.Page,
+		Limit: cnd.Paging.Limit,
+		Total: count,
+	}
 	return
 }
 
@@ -100,12 +115,16 @@ func (this *{{.CamelName}}Service) Take(where ...interface{}) *model.{{.Name}} {
 	return repositories.{{.Name}}Repository.Take(simple.GetDB(), where...)
 }
 
-func (this *{{.CamelName}}Service) QueryCnd(cnd *simple.QueryCnd) (list []model.{{.Name}}, err error) {
-	return repositories.{{.Name}}Repository.QueryCnd(simple.GetDB(), cnd)
+func (this *{{.CamelName}}Service) Find(cnd *simple.SqlCnd) (list []model.{{.Name}}, err error) {
+	return repositories.SubjectRepository.Find(simple.DB(), cnd)
 }
 
-func (this *{{.CamelName}}Service) Query(queries *simple.QueryParams) (list []model.{{.Name}}, paging *simple.Paging) {
-	return repositories.{{.Name}}Repository.Query(simple.GetDB(), queries)
+func (this *{{.CamelName}}Service) FindPageByParams(params *simple.QueryParams) (list []model.{{.Name}}, paging *simple.Paging) {
+	return repositories.SubjectRepository.FindPageByParams(simple.DB(), params)
+}
+
+func (this *{{.CamelName}}Service) FindPageByCnd(cnd *simple.SqlCnd) (list []model.{{.Name}}, paging *simple.Paging) {
+	return repositories.SubjectRepository.FindPageByCnd(simple.DB(), cnd)
 }
 
 func (this *{{.CamelName}}Service) Create(t *model.{{.Name}}) error {

@@ -173,7 +173,7 @@ func (this *{{.Name}}Controller) GetBy(id int64) *simple.JsonResult {
 }
 
 func (this *{{.Name}}Controller) AnyList() *simple.JsonResult {
-	list, paging := services.{{.Name}}Service.Query(simple.NewParamQueries(this.Ctx).PageAuto().Desc("id"))
+	list, paging := services.{{.Name}}Service.FindPageByParams(simple.NewQueryParams(this.Ctx).PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 

@@ -116,15 +116,15 @@ func (this *{{.CamelName}}Service) Take(where ...interface{}) *model.{{.Name}} {
 }
 
 func (this *{{.CamelName}}Service) Find(cnd *simple.SqlCnd) (list []model.{{.Name}}, err error) {
-	return repositories.SubjectRepository.Find(simple.DB(), cnd)
+	return repositories.{{.Name}}Repository.Find(simple.DB(), cnd)
 }
 
 func (this *{{.CamelName}}Service) FindPageByParams(params *simple.QueryParams) (list []model.{{.Name}}, paging *simple.Paging) {
-	return repositories.SubjectRepository.FindPageByParams(simple.DB(), params)
+	return repositories.{{.Name}}Repository.FindPageByParams(simple.DB(), params)
 }
 
 func (this *{{.CamelName}}Service) FindPageByCnd(cnd *simple.SqlCnd) (list []model.{{.Name}}, paging *simple.Paging) {
-	return repositories.SubjectRepository.FindPageByCnd(simple.DB(), cnd)
+	return repositories.{{.Name}}Repository.FindPageByCnd(simple.DB(), cnd)
 }
 
 func (this *{{.CamelName}}Service) Create(t *model.{{.Name}}) error {

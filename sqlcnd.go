@@ -1,6 +1,9 @@
 package simple
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/jinzhu/gorm"
+	"github.com/sirupsen/logrus"
+)
 
 type SqlCnd struct {
 	Params []ParamPair
@@ -110,15 +113,19 @@ func (s *SqlCnd) Build(db *gorm.DB) *gorm.DB {
 	return ret
 }
 
-func (s *SqlCnd) Find(db *gorm.DB, out interface{}) error {
-	return s.Build(db).Find(out).Error
+func (s *SqlCnd) Find(db *gorm.DB, out interface{}) {
+	if err := s.Build(db).Find(out).Error; err != nil {
+		logrus.Error(err)
+	}
 }
 
-func (s *SqlCnd) FindOne(db *gorm.DB, out interface{}) error {
-	return s.Limit(1).Build(db).Find(out).Error
+func (s *SqlCnd) FindOne(db *gorm.DB, out interface{}) {
+	if err := s.Limit(1).Build(db).Find(out).Error; err != nil {
+		logrus.Error(err)
+	}
 }
 
-func (s *SqlCnd) Count(db *gorm.DB, model interface{}) (int, error) {
+func (s *SqlCnd) Count(db *gorm.DB, model interface{}) int {
 	ret := db.Model(model)
 
 	// where
@@ -129,6 +136,8 @@ func (s *SqlCnd) Count(db *gorm.DB, model interface{}) (int, error) {
 	}
 
 	var count int
-	err := ret.Count(&count).Error
-	return count, err
+	if err := ret.Count(&count).Error; err != nil {
+		logrus.Error(err)
+	}
+	return count
 }

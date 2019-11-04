@@ -36,8 +36,13 @@ func (this *{{.CamelName}}Repository) Take(db *gorm.DB, where ...interface{}) *m
 	return ret
 }
 
-func (this *{{.CamelName}}Repository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.{{.Name}}, err error) {
-	err = cnd.Find(db, &list)
+func (this *{{.CamelName}}Repository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.{{.Name}}) {
+	cnd.Find(db, &list)
+	return
+}
+
+func (this *{{.CamelName}}Repository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.{{.Name}}) {
+	cnd.FindOne(db, &ret)
 	return
 }
 
@@ -46,15 +51,9 @@ func (this *{{.CamelName}}Repository) FindPageByParams(db *gorm.DB, params *simp
 }
 
 func (this *{{.CamelName}}Repository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.{{.Name}}, paging *simple.Paging) {
-	err := cnd.Find(db, &list)
-	if err != nil {
-		return
-	}
+	cnd.Find(db, &list)
+	count := cnd.Count(db, &model.{{.Name}}{})
 
-	count, err := cnd.Count(db, &model.{{.Name}}{})
-	if err != nil {
-		return
-	}
 	paging = &simple.Paging{
 		Page:  cnd.Paging.Page,
 		Limit: cnd.Paging.Limit,
@@ -115,8 +114,12 @@ func (this *{{.CamelName}}Service) Take(where ...interface{}) *model.{{.Name}} {
 	return repositories.{{.Name}}Repository.Take(simple.DB(), where...)
 }
 
-func (this *{{.CamelName}}Service) Find(cnd *simple.SqlCnd) (list []model.{{.Name}}, err error) {
+func (this *{{.CamelName}}Service) Find(cnd *simple.SqlCnd) []model.{{.Name}} {
 	return repositories.{{.Name}}Repository.Find(simple.DB(), cnd)
+}
+
+func (this *{{.CamelName}}Service) FindOne(cnd *simple.SqlCnd) *model.{{.Name}} {
+	return repositories.{{.Name}}Repository.FindOne(simple.DB(), cnd)
 }
 
 func (this *{{.CamelName}}Service) FindPageByParams(params *simple.QueryParams) (list []model.{{.Name}}, paging *simple.Paging) {

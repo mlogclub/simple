@@ -1,7 +1,7 @@
 package simple
 
 import (
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 
 	"github.com/mlogclub/simple/strcase"
 )

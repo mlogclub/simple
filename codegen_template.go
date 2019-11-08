@@ -159,7 +159,7 @@ import (
 	"{{.PkgName}}/model"
 	"{{.PkgName}}/services"
 	"github.com/mlogclub/simple"
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 	"strconv"
 )
 

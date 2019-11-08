@@ -50,6 +50,11 @@ func (s *SqlCnd) Like(column string, str string) *SqlCnd {
 	return s
 }
 
+func (s *SqlCnd) In(column string, params interface{}) *SqlCnd {
+	s.Where(column+" in (?) ", params)
+	return s
+}
+
 func (s *SqlCnd) Where(query string, args ...interface{}) *SqlCnd {
 	s.Params = append(s.Params, ParamPair{query, args})
 	return s

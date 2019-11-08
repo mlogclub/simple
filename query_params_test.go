@@ -2,6 +2,7 @@ package simple
 
 import (
 	"database/sql"
+	"fmt"
 	"testing"
 )
 
@@ -28,13 +29,18 @@ func TestQueryParams(t *testing.T) {
 	// _ = NewQueryParams(nil).Desc("id").Find(DB(), &users)
 	// fmt.Println(FormatJson(users))
 
-	var user User
-	_ = NewQueryParams(nil).Desc("id").FindOne(DB(), &user)
-
 	// count, _ := NewQueryParams(nil).Desc("id").Count(DB(), &User{})
 	// fmt.Println(count)
 
 	// params.Query(db).Find(&list)
 	// params.Count(db).Model(&model.Article{}).Count(&params.Paging.Total)
 	// NewSqlCnd().Where("username = ? or email = ?", "username", "email").Where("password = ?", 123).Query(DB()).Find(&users)
+
+	var users []User
+	NewSqlCnd().In("id", []int64{1, 2, 3}).Find(db, &users)
+
+	fmt.Println(len(users))
+	for _, user := range users {
+		fmt.Println(user.Nickname)
+	}
 }

@@ -19,7 +19,7 @@ func NewQueryParams(ctx iris.Context) *QueryParams {
 
 func (q *QueryParams) getValueByColumn(column string) string {
 	if q.Ctx == nil {
-		return "xxx"
+		return ""
 	}
 	fieldName := strcase.ToLowerCamel(column)
 	return q.Ctx.FormValue(fieldName)

@@ -6,13 +6,19 @@ import (
 )
 
 type SqlCnd struct {
-	Params []ParamPair
-	Orders []OrderByCol
-	Paging *Paging
+	SelectCols []string     // 要查询的字段，如果为空，表示查询所有字段
+	Params     []ParamPair  // 参数
+	Orders     []OrderByCol // 排序
+	Paging     *Paging      // 分页
 }
 
-func NewSqlCnd() *SqlCnd {
-	return &SqlCnd{}
+// selectCols: 需要查询的列
+func NewSqlCnd(selectCols ...string) *SqlCnd {
+	s := &SqlCnd{}
+	if len(selectCols) > 0 {
+		s.SelectCols = append(s.SelectCols, selectCols...)
+	}
+	return s
 }
 
 func (s *SqlCnd) Eq(column string, args ...interface{}) *SqlCnd {
@@ -97,6 +103,10 @@ func (s *SqlCnd) Page(page, limit int) *SqlCnd {
 
 func (s *SqlCnd) Build(db *gorm.DB) *gorm.DB {
 	ret := db
+
+	if len(s.SelectCols) > 0 {
+		ret = ret.Select(s.SelectCols)
+	}
 
 	// where
 	if len(s.Params) > 0 {

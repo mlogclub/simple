@@ -36,11 +36,18 @@ func TestQueryParams(t *testing.T) {
 	// params.Count(db).Model(&model.Article{}).Count(&params.Paging.Total)
 	// NewSqlCnd().Where("username = ? or email = ?", "username", "email").Where("password = ?", 123).Query(DB()).Find(&users)
 
-	var users []User
-	NewSqlCnd().In("id", []int64{1, 2, 3}).Find(db, &users)
+	// var users []User
+	// NewSqlCnd().In("id", []int64{1, 2, 3}).Find(db, &users)
+	//
+	// fmt.Println(len(users))
+	// for _, user := range users {
+	// 	fmt.Println(user.Nickname)
+	// }
 
-	fmt.Println(len(users))
+	var users []User
+	NewSqlCnd().Cols("id", "status").In("id", []int64{1, 2, 3}).Find(db, &users)
+
 	for _, user := range users {
-		fmt.Println(user.Nickname)
+		fmt.Println(user.Id, user.Nickname)
 	}
 }

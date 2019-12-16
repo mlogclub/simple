@@ -12,12 +12,16 @@ type GormModel struct {
 
 var db *gorm.DB
 
-func OpenDB(url string, maxIdleConns, maxOpenConns int, enableLog bool, models ...interface{}) (err error) {
+func OpenMySql(url string, maxIdleConns, maxOpenConns int, enableLog bool, models ...interface{}) (err error) {
+	return OpenDB("mysql", url, maxIdleConns, maxOpenConns, enableLog, models...)
+}
+
+func OpenDB(dialect string, url string, maxIdleConns, maxOpenConns int, enableLog bool, models ...interface{}) (err error) {
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
 		return "t_" + defaultTableName
 	}
 
-	if db, err = gorm.Open("mysql", url); err != nil {
+	if db, err = gorm.Open(dialect, url); err != nil {
 		log.Errorf("opens database failed: %s", err.Error())
 		return
 	}

@@ -43,7 +43,9 @@ func (this *{{.CamelName}}Repository) Find(db *gorm.DB, cnd *simple.SqlCnd) (lis
 
 func (this *{{.CamelName}}Repository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.{{.Name}} {
 	ret := &model.{{.Name}}{}
-	cnd.FindOne(db, &ret)
+	if err := cnd.FindOne(db, &ret); err != nil {
+		return nil
+	}
 	return ret
 }
 

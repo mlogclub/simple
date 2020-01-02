@@ -41,9 +41,10 @@ func (this *{{.CamelName}}Repository) Find(db *gorm.DB, cnd *simple.SqlCnd) (lis
 	return
 }
 
-func (this *{{.CamelName}}Repository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) (ret *model.{{.Name}}) {
+func (this *{{.CamelName}}Repository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.{{.Name}} {
+	ret := &model.{{.Name}}{}
 	cnd.FindOne(db, &ret)
-	return
+	return ret
 }
 
 func (this *{{.CamelName}}Repository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.{{.Name}}, paging *simple.Paging) {

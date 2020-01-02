@@ -144,10 +144,11 @@ func (s *SqlCnd) Find(db *gorm.DB, out interface{}) {
 	}
 }
 
-func (s *SqlCnd) FindOne(db *gorm.DB, out interface{}) {
+func (s *SqlCnd) FindOne(db *gorm.DB, out interface{}) error {
 	if err := s.Limit(1).Build(db).Find(out).Error; err != nil {
-		logrus.Error(err)
+		return err
 	}
+	return nil
 }
 
 func (s *SqlCnd) Count(db *gorm.DB, model interface{}) int {

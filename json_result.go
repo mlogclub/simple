@@ -98,15 +98,15 @@ func NewRspBuilderExcludes(obj interface{}, excludes ...string) *RspBuilder {
 	return &RspBuilder{Data: StructToMap(obj, excludes...)}
 }
 
-func (this *RspBuilder) Put(key string, value interface{}) *RspBuilder {
-	this.Data[key] = value
-	return this
+func (builder *RspBuilder) Put(key string, value interface{}) *RspBuilder {
+	builder.Data[key] = value
+	return builder
 }
 
-func (this *RspBuilder) Build() map[string]interface{} {
-	return this.Data
+func (builder *RspBuilder) Build() map[string]interface{} {
+	return builder.Data
 }
 
-func (this *RspBuilder) JsonResult() *JsonResult {
-	return JsonData(this.Data)
+func (builder *RspBuilder) JsonResult() *JsonResult {
+	return JsonData(builder.Data)
 }

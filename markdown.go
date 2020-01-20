@@ -63,11 +63,11 @@ func NewMd(options ...MdOption) *SimpleMd {
 }
 
 // run
-func (this *SimpleMd) Run(mdText string) *MdResult {
+func (md *SimpleMd) Run(mdText string) *MdResult {
 	mdText = strings.Replace(mdText, "\r\n", "\n", -1)
 
 	var htmlRenderer blackfriday.Option
-	if this.toc {
+	if md.toc {
 		htmlRenderer = blackfriday.WithRenderer(blackfriday.NewHTMLRenderer(blackfriday.HTMLRendererParameters{
 			Flags: blackfriday.TOC,
 		}))
@@ -112,7 +112,7 @@ func (this *SimpleMd) Run(mdText string) *MdResult {
 		}
 	})
 
-	tocHtml := this.buildTocHtml(doc)
+	tocHtml := md.buildTocHtml(doc)
 	doc.Find("nav").Remove()
 
 	contentHTML, _ = doc.Find("body").Html()
@@ -131,15 +131,15 @@ func (this *SimpleMd) Run(mdText string) *MdResult {
 
 	return &MdResult{
 		ContentHtml: contentHTML,
-		SummaryText: this.summaryText(doc),
-		ThumbUrl:    this.thumbnailUrl(doc),
+		SummaryText: md.summaryText(doc),
+		ThumbUrl:    md.thumbnailUrl(doc),
 		TocHtml:     tocHtml,
 	}
 }
 
 // 缩略图
-func (this *SimpleMd) thumbnailUrl(doc *goquery.Document) string {
-	if !this.thumb {
+func (md *SimpleMd) thumbnailUrl(doc *goquery.Document) string {
+	if !md.thumb {
 		return ""
 	}
 	selection := doc.Find("img").First()
@@ -150,8 +150,8 @@ func (this *SimpleMd) thumbnailUrl(doc *goquery.Document) string {
 	return thumbnailURL
 }
 
-func (this SimpleMd) buildTocHtml(doc *goquery.Document) string {
-	if !this.toc {
+func (md SimpleMd) buildTocHtml(doc *goquery.Document) string {
+	if !md.toc {
 		return ""
 	}
 	top := doc.Find("nav > ul > li")
@@ -171,8 +171,8 @@ func (this SimpleMd) buildTocHtml(doc *goquery.Document) string {
 }
 
 // // 构建toc
-// func (this *SimpleMd) tocHtml(doc goquery.Document) string {
-// 	if !this.toc {
+// func (md *SimpleMd) tocHtml(doc goquery.Document) string {
+// 	if !md.toc {
 // 		return ""
 // 	}
 // 	elements := doc.Find("h1, h2, h3, h4, h5")
@@ -199,11 +199,11 @@ func (this SimpleMd) buildTocHtml(doc *goquery.Document) string {
 // }
 
 // 摘要
-func (this *SimpleMd) summaryText(doc *goquery.Document) string {
-	if this.summaryTextLength <= 0 {
+func (md *SimpleMd) summaryText(doc *goquery.Document) string {
+	if md.summaryTextLength <= 0 {
 		return ""
 	}
 	text := doc.Text()
 	text = strings.TrimSpace(text)
-	return GetSummary(text, this.summaryTextLength)
+	return GetSummary(text, md.summaryTextLength)
 }

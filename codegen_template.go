@@ -20,7 +20,7 @@ func new{{.Name}}Repository() *{{.CamelName}}Repository {
 type {{.CamelName}}Repository struct {
 }
 
-func (this *{{.CamelName}}Repository) Get(db *gorm.DB, id int64) *model.{{.Name}} {
+func (r *{{.CamelName}}Repository) Get(db *gorm.DB, id int64) *model.{{.Name}} {
 	ret := &model.{{.Name}}{}
 	if err := db.First(ret, "id = ?", id).Error; err != nil {
 		return nil
@@ -28,7 +28,7 @@ func (this *{{.CamelName}}Repository) Get(db *gorm.DB, id int64) *model.{{.Name}
 	return ret
 }
 
-func (this *{{.CamelName}}Repository) Take(db *gorm.DB, where ...interface{}) *model.{{.Name}} {
+func (r *{{.CamelName}}Repository) Take(db *gorm.DB, where ...interface{}) *model.{{.Name}} {
 	ret := &model.{{.Name}}{}
 	if err := db.Take(ret, where...).Error; err != nil {
 		return nil
@@ -36,12 +36,12 @@ func (this *{{.CamelName}}Repository) Take(db *gorm.DB, where ...interface{}) *m
 	return ret
 }
 
-func (this *{{.CamelName}}Repository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.{{.Name}}) {
+func (r *{{.CamelName}}Repository) Find(db *gorm.DB, cnd *simple.SqlCnd) (list []model.{{.Name}}) {
 	cnd.Find(db, &list)
 	return
 }
 
-func (this *{{.CamelName}}Repository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.{{.Name}} {
+func (r *{{.CamelName}}Repository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *model.{{.Name}} {
 	ret := &model.{{.Name}}{}
 	if err := cnd.FindOne(db, &ret); err != nil {
 		return nil
@@ -49,11 +49,11 @@ func (this *{{.CamelName}}Repository) FindOne(db *gorm.DB, cnd *simple.SqlCnd) *
 	return ret
 }
 
-func (this *{{.CamelName}}Repository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.{{.Name}}, paging *simple.Paging) {
-	return this.FindPageByCnd(db, &params.SqlCnd)
+func (r *{{.CamelName}}Repository) FindPageByParams(db *gorm.DB, params *simple.QueryParams) (list []model.{{.Name}}, paging *simple.Paging) {
+	return r.FindPageByCnd(db, &params.SqlCnd)
 }
 
-func (this *{{.CamelName}}Repository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.{{.Name}}, paging *simple.Paging) {
+func (r *{{.CamelName}}Repository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd) (list []model.{{.Name}}, paging *simple.Paging) {
 	cnd.Find(db, &list)
 	count := cnd.Count(db, &model.{{.Name}}{})
 
@@ -65,27 +65,27 @@ func (this *{{.CamelName}}Repository) FindPageByCnd(db *gorm.DB, cnd *simple.Sql
 	return
 }
 
-func (this *{{.CamelName}}Repository) Create(db *gorm.DB, t *model.{{.Name}}) (err error) {
+func (r *{{.CamelName}}Repository) Create(db *gorm.DB, t *model.{{.Name}}) (err error) {
 	err = db.Create(t).Error
 	return
 }
 
-func (this *{{.CamelName}}Repository) Update(db *gorm.DB, t *model.{{.Name}}) (err error) {
+func (r *{{.CamelName}}Repository) Update(db *gorm.DB, t *model.{{.Name}}) (err error) {
 	err = db.Save(t).Error
 	return
 }
 
-func (this *{{.CamelName}}Repository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
+func (r *{{.CamelName}}Repository) Updates(db *gorm.DB, id int64, columns map[string]interface{}) (err error) {
 	err = db.Model(&model.{{.Name}}{}).Where("id = ?", id).Updates(columns).Error
 	return
 }
 
-func (this *{{.CamelName}}Repository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
+func (r *{{.CamelName}}Repository) UpdateColumn(db *gorm.DB, id int64, name string, value interface{}) (err error) {
 	err = db.Model(&model.{{.Name}}{}).Where("id = ?", id).UpdateColumn(name, value).Error
 	return
 }
 
-func (this *{{.CamelName}}Repository) Delete(db *gorm.DB, id int64) {
+func (r *{{.CamelName}}Repository) Delete(db *gorm.DB, id int64) {
 	db.Delete(&model.{{.Name}}{}, "id = ?", id)
 }
 
@@ -109,47 +109,47 @@ func new{{.Name}}Service() *{{.CamelName}}Service {
 type {{.CamelName}}Service struct {
 }
 
-func (this *{{.CamelName}}Service) Get(id int64) *model.{{.Name}} {
+func (s *{{.CamelName}}Service) Get(id int64) *model.{{.Name}} {
 	return repositories.{{.Name}}Repository.Get(simple.DB(), id)
 }
 
-func (this *{{.CamelName}}Service) Take(where ...interface{}) *model.{{.Name}} {
+func (s *{{.CamelName}}Service) Take(where ...interface{}) *model.{{.Name}} {
 	return repositories.{{.Name}}Repository.Take(simple.DB(), where...)
 }
 
-func (this *{{.CamelName}}Service) Find(cnd *simple.SqlCnd) []model.{{.Name}} {
+func (s *{{.CamelName}}Service) Find(cnd *simple.SqlCnd) []model.{{.Name}} {
 	return repositories.{{.Name}}Repository.Find(simple.DB(), cnd)
 }
 
-func (this *{{.CamelName}}Service) FindOne(cnd *simple.SqlCnd) *model.{{.Name}} {
+func (s *{{.CamelName}}Service) FindOne(cnd *simple.SqlCnd) *model.{{.Name}} {
 	return repositories.{{.Name}}Repository.FindOne(simple.DB(), cnd)
 }
 
-func (this *{{.CamelName}}Service) FindPageByParams(params *simple.QueryParams) (list []model.{{.Name}}, paging *simple.Paging) {
+func (s *{{.CamelName}}Service) FindPageByParams(params *simple.QueryParams) (list []model.{{.Name}}, paging *simple.Paging) {
 	return repositories.{{.Name}}Repository.FindPageByParams(simple.DB(), params)
 }
 
-func (this *{{.CamelName}}Service) FindPageByCnd(cnd *simple.SqlCnd) (list []model.{{.Name}}, paging *simple.Paging) {
+func (s *{{.CamelName}}Service) FindPageByCnd(cnd *simple.SqlCnd) (list []model.{{.Name}}, paging *simple.Paging) {
 	return repositories.{{.Name}}Repository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (this *{{.CamelName}}Service) Create(t *model.{{.Name}}) error {
+func (s *{{.CamelName}}Service) Create(t *model.{{.Name}}) error {
 	return repositories.{{.Name}}Repository.Create(simple.DB(), t)
 }
 
-func (this *{{.CamelName}}Service) Update(t *model.{{.Name}}) error {
+func (s *{{.CamelName}}Service) Update(t *model.{{.Name}}) error {
 	return repositories.{{.Name}}Repository.Update(simple.DB(), t)
 }
 
-func (this *{{.CamelName}}Service) Updates(id int64, columns map[string]interface{}) error {
+func (s *{{.CamelName}}Service) Updates(id int64, columns map[string]interface{}) error {
 	return repositories.{{.Name}}Repository.Updates(simple.DB(), id, columns)
 }
 
-func (this *{{.CamelName}}Service) UpdateColumn(id int64, name string, value interface{}) error {
+func (s *{{.CamelName}}Service) UpdateColumn(id int64, name string, value interface{}) error {
 	return repositories.{{.Name}}Repository.UpdateColumn(simple.DB(), id, name, value)
 }
 
-func (this *{{.CamelName}}Service) Delete(id int64) {
+func (s *{{.CamelName}}Service) Delete(id int64) {
 	repositories.{{.Name}}Repository.Delete(simple.DB(), id)
 }
 
@@ -170,7 +170,7 @@ type {{.Name}}Controller struct {
 	Ctx             iris.Context
 }
 
-func (this *{{.Name}}Controller) GetBy(id int64) *simple.JsonResult {
+func (r *{{.Name}}Controller) GetBy(id int64) *simple.JsonResult {
 	t := services.{{.Name}}Service.Get(id)
 	if t == nil {
 		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
@@ -178,14 +178,14 @@ func (this *{{.Name}}Controller) GetBy(id int64) *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *{{.Name}}Controller) AnyList() *simple.JsonResult {
-	list, paging := services.{{.Name}}Service.FindPageByParams(simple.NewQueryParams(this.Ctx).PageByReq().Desc("id"))
+func (r *{{.Name}}Controller) AnyList() *simple.JsonResult {
+	list, paging := services.{{.Name}}Service.FindPageByParams(simple.NewQueryParams(r.Ctx).PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
-func (this *{{.Name}}Controller) PostCreate() *simple.JsonResult {
+func (r *{{.Name}}Controller) PostCreate() *simple.JsonResult {
 	t := &model.{{.Name}}{}
-	err := this.Ctx.ReadForm(t)
+	err := r.Ctx.ReadForm(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -197,8 +197,8 @@ func (this *{{.Name}}Controller) PostCreate() *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (this *{{.Name}}Controller) PostUpdate() *simple.JsonResult {
-	id, err := simple.FormValueInt64(this.Ctx, "id")
+func (r *{{.Name}}Controller) PostUpdate() *simple.JsonResult {
+	id, err := simple.FormValueInt64(r.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -207,7 +207,7 @@ func (this *{{.Name}}Controller) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	err = this.Ctx.ReadForm(t)
+	err = r.Ctx.ReadForm(t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

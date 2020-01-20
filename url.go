@@ -14,24 +14,24 @@ func ParseUrl(rawUrl string) *UrlBuilder {
 	return ub
 }
 
-func (this *UrlBuilder) AddQuery(name, value string) *UrlBuilder {
-	this.query.Add(name, value)
-	return this
+func (builder *UrlBuilder) AddQuery(name, value string) *UrlBuilder {
+	builder.query.Add(name, value)
+	return builder
 }
 
-func (this *UrlBuilder) GetQuery() url.Values {
-	return this.query
+func (builder *UrlBuilder) GetQuery() url.Values {
+	return builder.query
 }
 
-func (this *UrlBuilder) GetURL() *url.URL {
-	return this.u
+func (builder *UrlBuilder) GetURL() *url.URL {
+	return builder.u
 }
 
-func (this *UrlBuilder) Build() *url.URL {
-	this.u.RawQuery = this.query.Encode()
-	return this.u
+func (builder *UrlBuilder) Build() *url.URL {
+	builder.u.RawQuery = builder.query.Encode()
+	return builder.u
 }
 
-func (this *UrlBuilder) BuildStr() string {
-	return this.Build().String()
+func (builder *UrlBuilder) BuildStr() string {
+	return builder.Build().String()
 }

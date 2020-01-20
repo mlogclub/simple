@@ -14,7 +14,7 @@ func NewLogWriter(logPath string) (*LogWriter, error) {
 	return &LogWriter{file: file}, nil
 }
 
-func (this *LogWriter) Write(b []byte) (n int, err error) {
+func (w *LogWriter) Write(b []byte) (n int, err error) {
 	_, _ = os.Stdout.Write(b)
-	return this.file.Write(b)
+	return w.file.Write(b)
 }

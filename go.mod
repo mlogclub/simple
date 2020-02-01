@@ -1,4 +1,4 @@
-module simple
+module github.com/mlogclub/simple
 
 go 1.13
 

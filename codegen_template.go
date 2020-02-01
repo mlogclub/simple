@@ -2,8 +2,7 @@ package simple
 
 import "html/template"
 
-var repositoryTmpl = template.Must(template.New("repository").Parse(`
-package repositories
+var repositoryTmpl = template.Must(template.New("repository").Parse(`package repositories
 
 import (
 	"{{.PkgName}}/model"
@@ -91,8 +90,7 @@ func (r *{{.CamelName}}Repository) Delete(db *gorm.DB, id int64) {
 
 `))
 
-var serviceTmpl = template.Must(template.New("service").Parse(`
-package services
+var serviceTmpl = template.Must(template.New("service").Parse(`package services
 
 import (
 	"{{.PkgName}}/model"
@@ -155,8 +153,7 @@ func (s *{{.CamelName}}Service) Delete(id int64) {
 
 `))
 
-var controllerTmpl = template.Must(template.New("controller").Parse(`
-package admin
+var controllerTmpl = template.Must(template.New("controller").Parse(`package admin
 
 import (
 	"{{.PkgName}}/model"

@@ -182,7 +182,7 @@ func (r *{{.Name}}Controller) AnyList() *simple.JsonResult {
 
 func (r *{{.Name}}Controller) PostCreate() *simple.JsonResult {
 	t := &model.{{.Name}}{}
-	err := r.Ctx.ReadForm(t)
+	err := simple.ReadForm(r.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -204,7 +204,7 @@ func (r *{{.Name}}Controller) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	err = r.Ctx.ReadForm(t)
+	err = simple.ReadForm(r.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

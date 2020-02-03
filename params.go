@@ -6,12 +6,33 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/iris-contrib/schema"
 	"github.com/kataras/iris/v12"
 )
+
+var (
+	decoder = schema.NewDecoder() // form, url, schema.
+)
+
+func init() {
+	decoder.AddAliasTag("form", "json")
+	decoder.ZeroEmpty(true)
+}
 
 // param error
 func paramError(name string) error {
 	return errors.New(fmt.Sprintf("unable to find param value '%s'", name))
+}
+
+// ReadForm read object from FormData
+func ReadForm(ctx iris.Context, obj interface{}) error {
+	values := ctx.FormValues()
+	if len(values) == 0 {
+		return nil
+	}
+	decoder := schema.NewDecoder()
+	decoder.ZeroEmpty(true)
+	return decoder.Decode(obj, values)
 }
 
 func FormValue(ctx iris.Context, name string) string {

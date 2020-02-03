@@ -167,7 +167,7 @@ type {{.Name}}Controller struct {
 	Ctx             iris.Context
 }
 
-func (r *{{.Name}}Controller) GetBy(id int64) *simple.JsonResult {
+func (c *{{.Name}}Controller) GetBy(id int64) *simple.JsonResult {
 	t := services.{{.Name}}Service.Get(id)
 	if t == nil {
 		return simple.JsonErrorMsg("Not found, id=" + strconv.FormatInt(id, 10))
@@ -175,14 +175,14 @@ func (r *{{.Name}}Controller) GetBy(id int64) *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (r *{{.Name}}Controller) AnyList() *simple.JsonResult {
-	list, paging := services.{{.Name}}Service.FindPageByParams(simple.NewQueryParams(r.Ctx).PageByReq().Desc("id"))
+func (c *{{.Name}}Controller) AnyList() *simple.JsonResult {
+	list, paging := services.{{.Name}}Service.FindPageByParams(simple.NewQueryParams(c.Ctx).PageByReq().Desc("id"))
 	return simple.JsonData(&simple.PageResult{Results: list, Page: paging})
 }
 
-func (r *{{.Name}}Controller) PostCreate() *simple.JsonResult {
+func (c *{{.Name}}Controller) PostCreate() *simple.JsonResult {
 	t := &model.{{.Name}}{}
-	err := simple.ReadForm(r.Ctx, t)
+	err := simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -194,8 +194,8 @@ func (r *{{.Name}}Controller) PostCreate() *simple.JsonResult {
 	return simple.JsonData(t)
 }
 
-func (r *{{.Name}}Controller) PostUpdate() *simple.JsonResult {
-	id, err := simple.FormValueInt64(r.Ctx, "id")
+func (c *{{.Name}}Controller) PostUpdate() *simple.JsonResult {
+	id, err := simple.FormValueInt64(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -204,7 +204,7 @@ func (r *{{.Name}}Controller) PostUpdate() *simple.JsonResult {
 		return simple.JsonErrorMsg("entity not found")
 	}
 
-	err = simple.ReadForm(r.Ctx, t)
+	err = simple.ReadForm(c.Ctx, t)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

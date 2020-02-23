@@ -64,6 +64,10 @@ func (r *{{.CamelName}}Repository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd
 	return
 }
 
+func (r *{{.CamelName}}Repository) Count(db *gorm.DB, cnd *simple.SqlCnd) int {
+	return cnd.Count(db, &model.{{.Name}}{})
+}
+
 func (r *{{.CamelName}}Repository) Create(db *gorm.DB, t *model.{{.Name}}) (err error) {
 	err = db.Create(t).Error
 	return
@@ -129,6 +133,10 @@ func (s *{{.CamelName}}Service) FindPageByParams(params *simple.QueryParams) (li
 
 func (s *{{.CamelName}}Service) FindPageByCnd(cnd *simple.SqlCnd) (list []model.{{.Name}}, paging *simple.Paging) {
 	return repositories.{{.Name}}Repository.FindPageByCnd(simple.DB(), cnd)
+}
+
+func (s *{{.CamelName}}Service) Count(cnd *simple.SqlCnd) int {
+	return repositories.{{.Name}}Repository.Count(simple.DB(), cnd)
 }
 
 func (s *{{.CamelName}}Service) Create(t *model.{{.Name}}) error {

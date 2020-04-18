@@ -3,10 +3,40 @@ package simple
 import (
 	"net/url"
 	"strings"
+	"unicode"
 
 	"github.com/PuerkitoBio/goquery"
 	uuid "github.com/iris-contrib/go.uuid"
 )
+
+/*
+IsBlank checks if a string is whitespace or empty (""). Observe the following behavior:
+    goutils.IsBlank("")        = true
+    goutils.IsBlank(" ")       = true
+    goutils.IsBlank("bob")     = false
+    goutils.IsBlank("  bob  ") = false
+Parameter:
+    str - the string to check
+Returns:
+    true - if the string is whitespace or empty ("")
+*/
+func IsBlank(str string) bool {
+	strLen := len(str)
+	if str == "" || strLen == 0 {
+		return true
+	}
+	for i := 0; i < strLen; i++ {
+		if unicode.IsSpace(rune(str[i])) == false {
+			return false
+		}
+	}
+	return true
+}
+
+// IsEmpty checks if a string is empty (""). Returns true if empty, and false otherwise.
+func IsEmpty(str string) bool {
+	return len(str) == 0
+}
 
 // 截取字符串
 func Substr(s string, start, length int) string {

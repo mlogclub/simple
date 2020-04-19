@@ -33,9 +33,17 @@ func IsBlank(str string) bool {
 	return true
 }
 
+func IsNotBlank(str string) bool {
+	return !IsBlank(str)
+}
+
 // IsEmpty checks if a string is empty (""). Returns true if empty, and false otherwise.
 func IsEmpty(str string) bool {
 	return len(str) == 0
+}
+
+func IsNotEmpty(str string) bool {
+    return !IsEmpty(str)
 }
 
 // 截取字符串

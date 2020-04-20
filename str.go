@@ -36,13 +36,21 @@ func IsNotBlank(str string) bool {
 	return !IsBlank(str)
 }
 
+func DefaultIfBlank(str, def string) string {
+	if IsBlank(str) {
+		return def
+	} else {
+		return str
+	}
+}
+
 // IsEmpty checks if a string is empty (""). Returns true if empty, and false otherwise.
 func IsEmpty(str string) bool {
 	return len(str) == 0
 }
 
 func IsNotEmpty(str string) bool {
-    return !IsEmpty(str)
+	return !IsEmpty(str)
 }
 
 // 截取字符串
@@ -70,11 +78,11 @@ func UUID() string {
 }
 
 func Equals(a, b string) bool {
-    return a == b
+	return a == b
 }
 
 func EqualsIgnoreCase(a, b string) bool {
-    return a == b || strings.ToUpper(a) == strings.ToUpper(b)
+	return a == b || strings.ToUpper(a) == strings.ToUpper(b)
 }
 
 // RuneLen 字符成长度

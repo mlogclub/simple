@@ -6,7 +6,7 @@ import (
 )
 
 func TestMarkdown(t *testing.T) {
-	htmlStr, summary := NewMd(EnableTOC()).Run(`
+	htmlStr, summary := New(EnableTOC()).Run(`
 # 一级目录
 ## 本次更新内容
 ## 功能预览

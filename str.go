@@ -93,6 +93,7 @@ func RuneLen(s string) int {
 
 // GetSummary 获取summary
 func GetSummary(s string, length int) string {
+	s = strings.TrimSpace(s)
 	summary := Substr(s, 0, length)
 	if RuneLen(s) > length {
 		summary += "..."

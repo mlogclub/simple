@@ -12,31 +12,31 @@ import (
 )
 
 // option
-type MdOption func(*SimpleMd)
+type Option func(*Markdown)
 
 // EnableTOC 开启TOC
-func EnableTOC() MdOption {
-	return func(md *SimpleMd) {
+func EnableTOC() Option {
+	return func(md *Markdown) {
 		md._enableToc = true
 	}
 }
 
 // SummaryLen 生成摘要的长度
-func SummaryLen(summaryLen int) MdOption {
-	return func(md *SimpleMd) {
+func SummaryLen(summaryLen int) Option {
+	return func(md *Markdown) {
 		md._summaryLen = summaryLen
 	}
 }
 
-// simple md
-type SimpleMd struct {
+// markdown
+type Markdown struct {
 	_summaryLen int  // 摘要长度
 	_enableToc  bool // 是否开启TOC
 }
 
-// NewMd new simple md
-func NewMd(options ...MdOption) *SimpleMd {
-	simpleMd := &SimpleMd{
+// New new markdown
+func New(options ...Option) *Markdown {
+	simpleMd := &Markdown{
 		_summaryLen: 256,
 		_enableToc:  false,
 	}
@@ -47,7 +47,7 @@ func NewMd(options ...MdOption) *SimpleMd {
 }
 
 // Run
-func (md *SimpleMd) Run(mdText string) (htmlStr, summary string) {
+func (md *Markdown) Run(mdText string) (htmlStr, summary string) {
 	mdText = strings.Replace(mdText, "\r\n", "\n", -1)
 
 	var htmlRenderer blackfriday.Option
@@ -71,7 +71,7 @@ func (md *SimpleMd) Run(mdText string) (htmlStr, summary string) {
 	return
 }
 
-func (md SimpleMd) doRender(data []byte) (*goquery.Document, error) {
+func (md Markdown) doRender(data []byte) (*goquery.Document, error) {
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(data))
 	if err != nil {
 		return nil, err
@@ -116,12 +116,19 @@ func (md SimpleMd) doRender(data []byte) (*goquery.Document, error) {
 }
 
 // summaryText 摘要
-func (md *SimpleMd) summaryText(doc *goquery.Document) string {
+func (md *Markdown) summaryText(doc *goquery.Document) string {
 	if md._summaryLen <= 0 {
 		return ""
 	}
 	doc.Find("nav").Remove()
-	text := doc.Text()
-	text = strings.TrimSpace(text)
-	return simple.GetSummary(text, md._summaryLen)
+	return simple.GetSummary(doc.Text(), md._summaryLen)
+}
+
+// GetSummary 截取markdown摘要
+func GetSummary(markdown string, summaryLen int) (summary string) {
+	if len(markdown) == 0 {
+		return ""
+	}
+	_, summary = New(SummaryLen(summaryLen)).Run(markdown)
+	return
 }

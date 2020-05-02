@@ -105,7 +105,7 @@ func (md Markdown) doRender(data []byte) (*goquery.Document, error) {
 		navLi := doc.Find("nav > ul > li")
 		// 说明外面有一层空的ul包裹，需要去掉它（这个地方不知道是不是markdown渲染器的BUG）
 		if navLi.Size() > 0 && navLi.Size() == 1 && doc.Find("nav > ul > li > a").Size() == 0 {
-			if tocHtml, err := navLi.Html(); err != nil {
+			if tocHtml, err := navLi.Html(); err == nil {
 				doc.Find("nav").First().SetHtml(tocHtml)
 			} else {
 				logrus.Error(err)

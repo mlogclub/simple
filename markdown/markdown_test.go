@@ -1,4 +1,4 @@
-package simple
+package markdown
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 )
 
 func TestMarkdown(t *testing.T) {
-	mr := NewMd(MdWithTOC()).Run(`
+	htmlStr, summary := NewMd(EnableTOC()).Run(`
 # 一级目录
 ## 本次更新内容
 ## 功能预览
@@ -17,6 +17,7 @@ func TestMarkdown(t *testing.T) {
 ## 目录2
 `)
 
-	fmt.Println(mr.TocHtml)
+	fmt.Println(htmlStr)
 	fmt.Println("---------------------------------------------------------------")
+	fmt.Println(summary)
 }

@@ -12,9 +12,11 @@ type SqlCnd struct {
 	Paging     *Paging      // 分页
 }
 
-// selectCols: 需要查询的列
-func NewSqlCnd(selectCols ...string) *SqlCnd {
-	s := &SqlCnd{}
+func NewSqlCnd() *SqlCnd {
+	return &SqlCnd{}
+}
+
+func (s *SqlCnd) Cols(selectCols ...string) *SqlCnd {
 	if len(selectCols) > 0 {
 		s.SelectCols = append(s.SelectCols, selectCols...)
 	}

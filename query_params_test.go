@@ -22,7 +22,7 @@ type User struct {
 }
 
 func TestQueryParams(t *testing.T) {
-	if err := OpenDB("root:123456@tcp(localhost:3306)/mlog_db2?charset=utf8mb4&parseTime=True&loc=Local", 5, 20, true); err != nil {
+	if err := OpenDB("mysql", "root:123456@tcp(localhost:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&loc=Local", 5, 20, true); err != nil {
 		panic(err)
 	}
 	// var users []User

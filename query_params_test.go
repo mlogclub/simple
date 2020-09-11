@@ -22,7 +22,7 @@ type User struct {
 }
 
 func TestQueryParams(t *testing.T) {
-	if err := OpenDB("mysql", "root:123456@tcp(localhost:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&loc=Local", 5, 20, true); err != nil {
+	if err := OpenDB("root:123456@tcp(localhost:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&loc=Local", nil, 5, 20); err != nil {
 		panic(err)
 	}
 	// var users []User
@@ -45,7 +45,7 @@ func TestQueryParams(t *testing.T) {
 	// }
 
 	var users []User
-	NewSqlCnd().Cols("id", "status").In("id", []int64{1, 2, 3}).Find(db, &users)
+	NewSqlCnd().Cols("id", "status", "nickname").In("id", []int64{1, 2, 3}).Find(db, &users)
 
 	for _, user := range users {
 		fmt.Println(user.Id, user.Nickname)

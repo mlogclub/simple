@@ -7,7 +7,7 @@ var repositoryTmpl = template.Must(template.New("repository").Parse(`package rep
 import (
 	"{{.PkgName}}/model"
 	"github.com/mlogclub/simple"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 var {{.Name}}Repository = new{{.Name}}Repository()
@@ -64,7 +64,7 @@ func (r *{{.CamelName}}Repository) FindPageByCnd(db *gorm.DB, cnd *simple.SqlCnd
 	return
 }
 
-func (r *{{.CamelName}}Repository) Count(db *gorm.DB, cnd *simple.SqlCnd) int {
+func (r *{{.CamelName}}Repository) Count(db *gorm.DB, cnd *simple.SqlCnd) int64 {
 	return cnd.Count(db, &model.{{.Name}}{})
 }
 
@@ -135,7 +135,7 @@ func (s *{{.CamelName}}Service) FindPageByCnd(cnd *simple.SqlCnd) (list []model.
 	return repositories.{{.Name}}Repository.FindPageByCnd(simple.DB(), cnd)
 }
 
-func (s *{{.CamelName}}Service) Count(cnd *simple.SqlCnd) int {
+func (s *{{.CamelName}}Service) Count(cnd *simple.SqlCnd) int64 {
 	return repositories.{{.Name}}Repository.Count(simple.DB(), cnd)
 }
 
@@ -249,7 +249,9 @@ var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
                   style="width: 100%;" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55"></el-table-column>
             <el-table-column prop="id" label="编号"></el-table-column>
-            {{range .Fields}}<el-table-column prop="{{.CamelName}}" label="{{.CamelName}}"></el-table-column>{{end}}
+            {{range .Fields}}
+			<el-table-column prop="{{.CamelName}}" label="{{.CamelName}}"></el-table-column>
+			{{end}}
             <el-table-column label="操作" width="150">
                 <template slot-scope="scope">
                     <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -304,8 +306,6 @@ var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
 </template>
 
 <script>
-  import HttpClient from '../../apis/HttpClient'
-
   export default {
     name: "List",
     data() {

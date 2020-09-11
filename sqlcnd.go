@@ -1,8 +1,8 @@
 package simple
 
 import (
-	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 )
 
 type SqlCnd struct {
@@ -153,7 +153,7 @@ func (s *SqlCnd) FindOne(db *gorm.DB, out interface{}) error {
 	return nil
 }
 
-func (s *SqlCnd) Count(db *gorm.DB, model interface{}) int {
+func (s *SqlCnd) Count(db *gorm.DB, model interface{}) int64 {
 	ret := db.Model(model)
 
 	// where
@@ -163,7 +163,7 @@ func (s *SqlCnd) Count(db *gorm.DB, model interface{}) int {
 		}
 	}
 
-	var count int
+	var count int64
 	if err := ret.Count(&count).Error; err != nil {
 		logrus.Error(err)
 	}

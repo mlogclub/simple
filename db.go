@@ -1,37 +1,47 @@
 package simple
 
 import (
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"database/sql"
 	log "github.com/sirupsen/logrus"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
 type GormModel struct {
 	Id int64 `gorm:"PRIMARY_KEY;AUTO_INCREMENT" json:"id" form:"id"`
 }
 
-var db *gorm.DB
+var (
+	db    *gorm.DB
+	sqlDB *sql.DB
+)
 
-func OpenMySql(url string, maxIdleConns, maxOpenConns int, enableLog bool, models ...interface{}) (err error) {
-	return OpenDB("mysql", url, maxIdleConns, maxOpenConns, enableLog, models...)
-}
-
-func OpenDB(dialect string, url string, maxIdleConns, maxOpenConns int, enableLog bool, models ...interface{}) (err error) {
-	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
-		return "t_" + defaultTableName
+func OpenDB(dsn string, config *gorm.Config, maxIdleConns, maxOpenConns int, models ...interface{}) (err error) {
+	if config == nil {
+		config = &gorm.Config{}
 	}
 
-	if db, err = gorm.Open(dialect, url); err != nil {
+	if config.NamingStrategy == nil {
+		config.NamingStrategy = schema.NamingStrategy{
+			TablePrefix:   "t_",
+			SingularTable: true,
+		}
+	}
+
+	if db, err = gorm.Open(mysql.Open(dsn), config); err != nil {
 		log.Errorf("opens database failed: %s", err.Error())
 		return
 	}
 
-	db.LogMode(enableLog)
-	db.SingularTable(true) // 禁用表名负数
-	db.DB().SetMaxIdleConns(maxIdleConns)
-	db.DB().SetMaxOpenConns(maxOpenConns)
+	if sqlDB, err = db.DB(); err == nil {
+		sqlDB.SetMaxIdleConns(maxIdleConns)
+		sqlDB.SetMaxOpenConns(maxOpenConns)
+	} else {
+		log.Error(err)
+	}
 
-	if err = db.AutoMigrate(models...).Error; nil != err {
+	if err = db.AutoMigrate(models...); nil != err {
 		log.Errorf("auto migrate tables failed: %s", err.Error())
 	}
 	return
@@ -44,10 +54,10 @@ func DB() *gorm.DB {
 
 // 关闭连接
 func CloseDB() {
-	if db == nil {
+	if sqlDB == nil {
 		return
 	}
-	if err := db.Close(); nil != err {
+	if err := sqlDB.Close(); nil != err {
 		log.Errorf("Disconnect from database failed: %s", err.Error())
 	}
 }

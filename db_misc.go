@@ -4,9 +4,9 @@ import "database/sql"
 
 // 分页请求数据
 type Paging struct {
-	Page  int `json:"page"`  // 页码
-	Limit int `json:"limit"` // 每页条数
-	Total int `json:"total"` // 总数据条数
+	Page  int   `json:"page"`  // 页码
+	Limit int   `json:"limit"` // 每页条数
+	Total int64 `json:"total"` // 总数据条数
 }
 
 func (p *Paging) Offset() int {
@@ -21,8 +21,8 @@ func (p *Paging) TotalPage() int {
 	if p.Total == 0 || p.Limit == 0 {
 		return 0
 	}
-	totalPage := p.Total / p.Limit
-	if p.Total%p.Limit > 0 {
+	totalPage := int(p.Total) / p.Limit
+	if int(p.Total)%p.Limit > 0 {
 		totalPage = totalPage + 1
 	}
 	return totalPage

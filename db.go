@@ -9,7 +9,7 @@ import (
 )
 
 type GormModel struct {
-	Id int64 `gorm:"PRIMARY_KEY;AUTO_INCREMENT" json:"id" form:"id"`
+	Id int64 `gorm:"primaryKey;autoIncrement" json:"id" form:"id"`
 }
 
 var (
@@ -60,26 +60,4 @@ func CloseDB() {
 	if err := sqlDB.Close(); nil != err {
 		log.Errorf("Disconnect from database failed: %s", err.Error())
 	}
-}
-
-// 事务环绕
-func Tx(db *gorm.DB, txFunc func(tx *gorm.DB) error) (err error) {
-	tx := db.Begin()
-	if tx.Error != nil {
-		return
-	}
-
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-			panic(r) // re-throw panic after Rollback
-		} else if err != nil {
-			tx.Rollback()
-		} else {
-			err = tx.Commit().Error
-		}
-	}()
-
-	err = txFunc(tx)
-	return err
 }

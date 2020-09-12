@@ -14,7 +14,9 @@ func WriteString(path string, content string, append bool) error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func() {
+		_ = file.Close()
+	}()
 	_, err = file.WriteString(content)
 	return err
 }
@@ -24,7 +26,9 @@ func AppendLine(path string, content string) error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func() {
+		_ = file.Close()
+	}()
 
 	content = strings.Join([]string{content, "\n"}, "")
 	_, err = file.WriteString(content)

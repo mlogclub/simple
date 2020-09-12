@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-type User struct {
+type TestUser struct {
 	GormModel
 	Username    sql.NullString `gorm:"size:32;unique;" json:"username" form:"username"`
 	Email       sql.NullString `gorm:"size:128;unique;" json:"email" form:"email"`
@@ -21,30 +21,23 @@ type User struct {
 	UpdateTime  int64          `json:"updateTime" form:"updateTime"`
 }
 
+type TestArticle struct {
+	GormModel
+	Title      string `gorm:"not null"`
+	Content    string `gorm:"not null"`
+	CreateTime int64  `json:"createTime" form:"createTime"`
+	UpdateTime int64  `json:"updateTime" form:"updateTime"`
+}
+
 func TestQueryParams(t *testing.T) {
-	if err := OpenDB("root:123456@tcp(localhost:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&loc=Local", nil, 5, 20); err != nil {
+	models := []interface{}{&TestUser{}, &TestArticle{}}
+
+	if err := OpenDB("root:123456@tcp(localhost:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&loc=Local",
+		nil, 5, 20, models...); err != nil {
 		panic(err)
 	}
-	// var users []User
-	// _ = NewQueryParams(nil).Desc("id").Find(DB(), &users)
-	// fmt.Println(FormatJson(users))
 
-	// count, _ := NewQueryParams(nil).Desc("id").Count(DB(), &User{})
-	// fmt.Println(count)
-
-	// params.Query(db).Find(&list)
-	// params.Count(db).Model(&model.Article{}).Count(&params.Paging.Total)
-	// NewSqlCnd().Where("username = ? or email = ?", "username", "email").Where("password = ?", 123).Query(DB()).Find(&users)
-
-	// var users []User
-	// NewSqlCnd().In("id", []int64{1, 2, 3}).Find(db, &users)
-	//
-	// fmt.Println(len(users))
-	// for _, user := range users {
-	// 	fmt.Println(user.Nickname)
-	// }
-
-	var users []User
+	var users []TestUser
 	NewSqlCnd().Cols("id", "status", "nickname").In("id", []int64{1, 2, 3}).Find(db, &users)
 
 	for _, user := range users {

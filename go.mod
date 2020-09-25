@@ -1,6 +1,6 @@
 module github.com/mlogclub/simple
 
-go 1.13
+go 1.15
 
 require (
 	github.com/Joker/hpp v1.0.0 // indirect

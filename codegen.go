@@ -144,7 +144,7 @@ func generateWeb(baseDir, pkgName string, s GenerateStruct) error {
 	}
 	c := b.String()
 
-	sub := path.Join("/web/admin/src/views/", strcase.ToKebab(s.Name), "Index.vue")
+	sub := path.Join("/web/admin/src/views/", strcase.ToKebab(s.Name), "index.vue")
 
 	p, err := getFilePath(baseDir, sub)
 	if err != nil {

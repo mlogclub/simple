@@ -5,7 +5,6 @@ go 1.15
 require (
 	github.com/Joker/hpp v1.0.0 // indirect
 	github.com/PuerkitoBio/goquery v1.5.1
-	github.com/iris-contrib/blackfriday v2.0.0+incompatible
 	github.com/iris-contrib/go.uuid v2.0.0+incompatible
 	github.com/iris-contrib/schema v0.0.6
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect

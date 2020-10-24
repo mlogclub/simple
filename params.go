@@ -3,8 +3,10 @@ package simple
 import (
 	"errors"
 	"fmt"
+	"github.com/mlogclub/simple/date"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/iris-contrib/schema"
 	"github.com/kataras/iris/v12"
@@ -127,6 +129,21 @@ func FormValueBool(ctx iris.Context, name string) (bool, error) {
 		return false, paramError(name)
 	}
 	return strconv.ParseBool(str)
+}
+
+// 从请求中获取日期
+func FormDate(ctx iris.Context, name string) *time.Time {
+	value := FormValue(ctx, name)
+	if IsBlank(value) {
+		return nil
+	}
+	layouts := []string{date.FmtDateTime, date.FmtDate, date.FmtDateTimeNoSeconds}
+	for _, layout := range layouts {
+		if ret, err := date.Parse(value, layout); err == nil {
+			return &ret
+		}
+	}
+	return nil
 }
 
 func GetPaging(ctx iris.Context) *Paging {

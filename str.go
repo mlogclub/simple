@@ -32,6 +32,15 @@ func IsBlank(str string) bool {
 	return true
 }
 
+func IsAnyBlank(strs ...string) bool {
+	for _, str := range strs {
+		if IsBlank(str) {
+			return true
+		}
+	}
+	return false
+}
+
 func IsNotBlank(str string) bool {
 	return !IsBlank(str)
 }

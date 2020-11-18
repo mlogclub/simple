@@ -37,6 +37,15 @@ func IsNotBlank(str string) bool {
 	return !IsBlank(str)
 }
 
+func IsAnyBlank(strs ...string) bool {
+	for _, str := range strs {
+		if IsBlank(str) {
+			return true
+		}
+	}
+	return false
+}
+
 func DefaultIfBlank(str, def string) string {
 	if IsBlank(str) {
 		return def

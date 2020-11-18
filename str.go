@@ -1,6 +1,7 @@
 package simple
 
 import (
+	"github.com/sirupsen/logrus"
 	"strings"
 	"unicode"
 
@@ -43,6 +44,15 @@ func IsAnyBlank(strs ...string) bool {
 
 func IsNotBlank(str string) bool {
 	return !IsBlank(str)
+}
+
+func IsAnyBlank(strs ...string) bool {
+	for _, str := range strs {
+		if IsBlank(str) {
+			return true
+		}
+	}
+	return false
 }
 
 func DefaultIfBlank(str, def string) string {
@@ -114,6 +124,7 @@ func GetSummary(s string, length int) string {
 func GetHtmlText(html string) string {
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	if err != nil {
+		logrus.Error(err)
 		return ""
 	}
 	return doc.Text()

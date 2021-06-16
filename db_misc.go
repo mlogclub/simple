@@ -49,7 +49,7 @@ type PageResult struct {
 type CursorResult struct {
 	Results interface{} `json:"results"` // 数据
 	Cursor  string      `json:"cursor"`  // 下一页
-	HasMore bool        `json:"hasMore`  // 是否还有数据
+	HasMore bool        `json:"hasMore"` // 是否还有数据
 }
 
 func SqlNullString(value string) sql.NullString {

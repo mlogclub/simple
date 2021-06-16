@@ -39,10 +39,11 @@ func JsonPageData(results interface{}, page *Paging) *JsonResult {
 	})
 }
 
-func JsonCursorData(results interface{}, cursor string) *JsonResult {
+func JsonCursorData(results interface{}, cursor string, hasMore bool) *JsonResult {
 	return JsonData(&CursorResult{
 		Results: results,
 		Cursor:  cursor,
+		HasMore: hasMore,
 	})
 }
 

@@ -1,4 +1,0 @@
-package simple
-
-func main() {
-}

@@ -230,7 +230,7 @@ var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
 <template>
     <section class="page-container">
         <!--工具条-->
-        <el-col :span="24" class="toolbar">
+        <div class="toolbar">
             <el-form :inline="true" :model="filters">
                 <el-form-item>
                     <el-input v-model="filters.name" placeholder="名称"></el-input>
@@ -242,7 +242,7 @@ var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
                     <el-button type="primary" @click="handleAdd">新增</el-button>
                 </el-form-item>
             </el-form>
-        </el-col>
+        </div>
 
         <!--列表-->
         <el-table :data="results" highlight-current-row border v-loading="listLoading"
@@ -260,16 +260,17 @@ var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
         </el-table>
 
         <!--工具条-->
-        <el-col :span="24" class="toolbar">
-            <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[20, 50, 100, 300]"
+        <div class="pagebar">
+            <el-pagination
                            @current-change="handlePageChange"
                            @size-change="handleLimitChange"
+                           :page-sizes="[20, 50, 100, 300]"
                            :current-page="page.page"
                            :page-size="page.limit"
                            :total="page.total"
-                           style="float:right;">
+						   layout="total, sizes, prev, pager, next, jumper">
             </el-pagination>
-        </el-col>
+        </div>
 
         <!--新增界面-->
         <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">

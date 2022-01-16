@@ -10,6 +10,9 @@ func Parse(str string, t interface{}) error {
 }
 
 func ToStr(t interface{}) (string, error) {
+	if t == nil {
+		return "", nil
+	}
 	data, err := json.Marshal(t)
 	if err != nil {
 		return "", err

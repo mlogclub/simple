@@ -2,6 +2,7 @@ package json
 
 import (
 	"encoding/json"
+	"github.com/sirupsen/logrus"
 )
 
 func Parse(str string, t interface{}) error {
@@ -14,4 +15,13 @@ func ToStr(t interface{}) (string, error) {
 		return "", err
 	}
 	return string(data), nil
+}
+
+func ToJsonStr(t interface{}) string {
+	str, err := ToStr(t)
+	if err != nil {
+		logrus.Error(err)
+		return ""
+	}
+	return str
 }

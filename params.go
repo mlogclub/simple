@@ -3,10 +3,11 @@ package simple
 import (
 	"errors"
 	"fmt"
-	"github.com/mlogclub/simple/date"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/mlogclub/simple/date"
 
 	"github.com/iris-contrib/schema"
 	"github.com/kataras/iris/v12"
@@ -129,6 +130,18 @@ func FormValueBool(ctx iris.Context, name string) (bool, error) {
 		return false, paramError(name)
 	}
 	return strconv.ParseBool(str)
+}
+
+func FormValueBoolDefault(ctx iris.Context, name string, def bool) bool {
+	str := ctx.FormValue(name)
+	if str == "" {
+		return def
+	}
+	value, err := strconv.ParseBool(str)
+	if err != nil {
+		return def
+	}
+	return value
 }
 
 // 从请求中获取日期

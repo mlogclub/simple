@@ -2,6 +2,7 @@ package simple
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"os"
 	"path"
@@ -167,7 +168,7 @@ func writeFile(filepath string, content string) error {
 	}
 	if exists {
 		fmt.Println("文件已经存在...", filepath)
-		filepath = filepath + ".temp"
+		return errors.New("文件已经存在..." + filepath)
 	}
 	return WriteString(filepath, content, true)
 }

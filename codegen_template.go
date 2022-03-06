@@ -230,7 +230,7 @@ var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
 <template>
     <section class="page-container">
         <!--工具条-->
-        <div class="toolbar">
+        <div ref="toolbar" class="toolbar">
             <el-form :inline="true" :model="filters">
                 <el-form-item>
                     <el-input v-model="filters.name" placeholder="名称"></el-input>
@@ -245,22 +245,31 @@ var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
         </div>
 
         <!--列表-->
-        <el-table :data="results" highlight-current-row border v-loading="listLoading"
-                  style="width: 100%;" @selection-change="handleSelectionChange">
-            <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column prop="id" label="编号"></el-table-column>
-            {{range .Fields}}
-			<el-table-column prop="{{.CamelName}}" label="{{.CamelName}}"></el-table-column>
-			{{end}}
-            <el-table-column label="操作" width="150">
-                <template slot-scope="scope">
-                    <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
+		<div ref="mainContent" :style="{ height: mainHeight }">
+			<el-table
+				v-loading="listLoading"
+				height="100%"
+				:data="results"
+				highlight-current-row
+				stripe
+				border
+				@selection-change="handleSelectionChange"
+			>
+				<el-table-column type="selection" width="55"></el-table-column>
+				<el-table-column prop="id" label="编号"></el-table-column>
+				{{range .Fields}}
+				<el-table-column prop="{{.CamelName}}" label="{{.CamelName}}"></el-table-column>
+				{{end}}
+				<el-table-column label="操作" width="150">
+					<template slot-scope="scope">
+						<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
+		</div>
 
         <!--工具条-->
-        <div class="pagebar">
+        <div ref="pagebar" class="pagebar">
             <el-pagination
                            @current-change="handlePageChange"
                            @size-change="handleLimitChange"
@@ -306,9 +315,11 @@ var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
 </template>
 
 <script>
+  import mainHeight from "@/utils/mainHeight";
   export default {
     data() {
       return {
+		mainHeight: "300px",
         results: [],
         listLoading: false,
         page: {},
@@ -325,6 +336,7 @@ var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
       }
     },
     mounted() {
+	  mainHeight(this);
       this.list();
     },
     methods: {
@@ -334,11 +346,11 @@ var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
 			limit: this.page.limit,
 		  })
 		  try {
-			const data = await this.$axios.post('/api/admin/{{.KebabName}}/list', params)
+			const data = await this.axios.form('/api/admin/{{.KebabName}}/list', params)
 			this.results = data.results
 			this.page = data.page
 		  } catch (e) {
-			this.$notify.error({ title: '错误', message: e || e.message })
+			this.$notify.error({ title: '错误', message: e.message || e })
 		  } finally {
 			this.listLoading = false
 		  }
@@ -360,30 +372,30 @@ var viewIndexTmpl = template.Must(template.New("index.vue").Parse(`
 		},
 		async addSubmit() {
 		  try {
-			await this.$axios.post('/api/admin/{{.KebabName}}/create', this.addForm)
+			await this.axios.form('/api/admin/{{.KebabName}}/create', this.addForm)
 			this.$message({ message: '提交成功', type: 'success' })
 			this.addFormVisible = false
 			await this.list()
 		  } catch (e) {
-			this.$notify.error({ title: '错误', message: e || e.message })
+			this.$notify.error({ title: '错误', message: e.message || e })
 		  }
 		},
 		async handleEdit(index, row) {
 		  try {
-			const data = await this.$axios.get('/api/admin/{{.KebabName}}/' + row.id)
+			const data = await this.axios.get('/api/admin/{{.KebabName}}/' + row.id)
 			this.editForm = Object.assign({}, data)
 			this.editFormVisible = true
 		  } catch (e) {
-			this.$notify.error({ title: '错误', message: e || e.message })
+			this.$notify.error({ title: '错误', message: e.message || e })
 		  }
 		},
 		async editSubmit() {
 		  try {
-			await this.$axios.post('/api/admin/{{.KebabName}}/update', this.editForm)
+			await this.axios.form('/api/admin/{{.KebabName}}/update', this.editForm)
 			await this.list()
 			this.editFormVisible = false
 		  } catch (e) {
-			this.$notify.error({ title: '错误', message: e || e.message })
+			this.$notify.error({ title: '错误', message: e.message || e })
 		  }
 		},
 	

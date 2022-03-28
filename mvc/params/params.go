@@ -1,13 +1,14 @@
-package simple
+package params
 
 import (
 	"errors"
 	"fmt"
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/strs"
+	"github.com/mlogclub/simple/db"
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/mlogclub/simple/date"
 
 	"github.com/iris-contrib/schema"
 	"github.com/kataras/iris/v12"
@@ -147,19 +148,19 @@ func FormValueBoolDefault(ctx iris.Context, name string, def bool) bool {
 // 从请求中获取日期
 func FormDate(ctx iris.Context, name string) *time.Time {
 	value := FormValue(ctx, name)
-	if IsBlank(value) {
+	if strs.IsBlank(value) {
 		return nil
 	}
-	layouts := []string{date.FmtDateTime, date.FmtDate, date.FmtDateTimeNoSeconds}
+	layouts := []string{dates.FmtDateTime, dates.FmtDate, dates.FmtDateTimeNoSeconds}
 	for _, layout := range layouts {
-		if ret, err := date.Parse(value, layout); err == nil {
+		if ret, err := dates.Parse(value, layout); err == nil {
 			return &ret
 		}
 	}
 	return nil
 }
 
-func GetPaging(ctx iris.Context) *Paging {
+func GetPaging(ctx iris.Context) *db.Paging {
 	page := FormValueIntDefault(ctx, "page", 1)
 	limit := FormValueIntDefault(ctx, "limit", 20)
 	if page <= 0 {
@@ -168,5 +169,5 @@ func GetPaging(ctx iris.Context) *Paging {
 	if limit <= 0 {
 		limit = 20
 	}
-	return &Paging{Page: page, Limit: limit}
+	return &db.Paging{Page: page, Limit: limit}
 }

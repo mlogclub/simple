@@ -1,4 +1,4 @@
-package simple
+package urls
 
 import "net/url"
 

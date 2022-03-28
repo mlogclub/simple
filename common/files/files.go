@@ -1,4 +1,4 @@
-package simple
+package files
 
 import (
 	"os"

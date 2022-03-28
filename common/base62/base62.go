@@ -1,4 +1,4 @@
-package simple
+package base62
 
 import (
 	"math"
@@ -16,10 +16,7 @@ var CodeMap = map[string]int64{"0": 0, "1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "
 	"L": 47, "M": 48, "N": 49, "O": 50, "P": 51, "Q": 52, "R": 53, "S": 54, "T": 55, "U": 56, "V": 57, "W": 58,
 	"X": 59, "Y": 60, "Z": 61}
 
-/**
- * 编码 整数 为 base62 字符串
- */
-func Encode62(number int64) string {
+func Encode(number int64) string {
 	if number == 0 {
 		return "0"
 	}
@@ -34,10 +31,7 @@ func Encode62(number int64) string {
 	return string(result)
 }
 
-/**
- * 解码字符串为整数
- */
-func Decode62(str string) int64 {
+func Decode(str string) int64 {
 	str = strings.TrimSpace(str)
 	var result int64 = 0
 	for index, char := range []byte(str) {

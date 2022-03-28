@@ -1,4 +1,4 @@
-package simple
+package db
 
 import (
 	"database/sql"
@@ -7,7 +7,7 @@ import (
 )
 
 type TestUser struct {
-	GormModel
+	db.GormModel
 	Username    sql.NullString `gorm:"size:32;unique;" json:"username" form:"username"`
 	Email       sql.NullString `gorm:"size:128;unique;" json:"email" form:"email"`
 	Nickname    string         `gorm:"size:16;" json:"nickname" form:"nickname"`
@@ -22,7 +22,7 @@ type TestUser struct {
 }
 
 type TestArticle struct {
-	GormModel
+	db.GormModel
 	Title      string `gorm:"not null"`
 	Content    string `gorm:"not null"`
 	CreateTime int64  `json:"createTime" form:"createTime"`

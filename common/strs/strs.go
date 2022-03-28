@@ -1,11 +1,9 @@
-package simple
+package strs
 
 import (
-	"github.com/sirupsen/logrus"
 	"strings"
 	"unicode"
 
-	"github.com/PuerkitoBio/goquery"
 	uuid "github.com/iris-contrib/go.uuid"
 )
 
@@ -63,7 +61,6 @@ func IsNotEmpty(str string) bool {
 	return !IsEmpty(str)
 }
 
-// 截取字符串
 func Substr(s string, start, length int) string {
 	bt := []rune(s)
 	if start < 0 {
@@ -81,12 +78,6 @@ func Substr(s string, start, length int) string {
 	return string(bt[start:end])
 }
 
-// UUID
-func UUID() string {
-	u, _ := uuid.NewV4()
-	return strings.ReplaceAll(u.String(), "-", "")
-}
-
 func Equals(a, b string) bool {
 	return a == b
 }
@@ -95,28 +86,13 @@ func EqualsIgnoreCase(a, b string) bool {
 	return a == b || strings.ToUpper(a) == strings.ToUpper(b)
 }
 
+func UUID() string {
+	u, _ := uuid.NewV4()
+	return strings.ReplaceAll(u.String(), "-", "")
+}
+
 // RuneLen 字符成长度
 func RuneLen(s string) int {
 	bt := []rune(s)
 	return len(bt)
-}
-
-// GetSummary 获取summary
-func GetSummary(s string, length int) string {
-	s = strings.TrimSpace(s)
-	summary := Substr(s, 0, length)
-	if RuneLen(s) > length {
-		summary += "..."
-	}
-	return summary
-}
-
-// GetHtmlText 获取html文本
-func GetHtmlText(html string) string {
-	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
-	if err != nil {
-		logrus.Error(err)
-		return ""
-	}
-	return doc.Text()
 }

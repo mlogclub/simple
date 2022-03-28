@@ -1,16 +1,17 @@
-package simple
+package codegen
 
 import (
 	"bytes"
 	"errors"
 	"fmt"
+	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/common/files"
+	strcase2 "github.com/mlogclub/simple/common/strcase"
 	"os"
 	"path"
 	"reflect"
 
 	"github.com/sirupsen/logrus"
-
-	"github.com/mlogclub/simple/strcase"
 )
 
 type GenerateStruct struct {
@@ -49,8 +50,8 @@ func Generate(baseDir, pkgName string, models ...GenerateStruct) {
 }
 
 func GetGenerateStruct(s interface{}) GenerateStruct {
-	structName := StructName(s)
-	structFields := StructFields(s)
+	structName := simple.StructName(s)
+	structFields := simple.StructFields(s)
 
 	var fields []GenerateField
 	for _, f := range structFields {
@@ -58,7 +59,7 @@ func GetGenerateStruct(s interface{}) GenerateStruct {
 			continue
 		}
 		fields = append(fields, GenerateField{
-			CamelName:   strcase.ToLowerCamel(f.Name),
+			CamelName:   strcase2.ToLowerCamel(f.Name),
 			NativeField: f,
 		})
 	}
@@ -74,8 +75,8 @@ func generateRepository(baseDir, pkgName string, s GenerateStruct) error {
 	err := repositoryTmpl.Execute(&b, &InputData{
 		PkgName:   pkgName,
 		Name:      s.Name,
-		CamelName: strcase.ToLowerCamel(s.Name),
-		KebabName: strcase.ToKebab(s.Name),
+		CamelName: strcase2.ToLowerCamel(s.Name),
+		KebabName: strcase2.ToKebab(s.Name),
 		Fields:    s.Fields,
 	})
 	if err != nil {
@@ -83,7 +84,7 @@ func generateRepository(baseDir, pkgName string, s GenerateStruct) error {
 	}
 	c := b.String()
 
-	p, err := getFilePath(baseDir, "/repositories/"+strcase.ToSnake(s.Name+"_repository.go"))
+	p, err := getFilePath(baseDir, "/repositories/"+strcase2.ToSnake(s.Name+"_repository.go"))
 	if err != nil {
 		return err
 	}
@@ -95,8 +96,8 @@ func generateService(baseDir, pkgName string, s GenerateStruct) error {
 	err := serviceTmpl.Execute(&b, &InputData{
 		PkgName:   pkgName,
 		Name:      s.Name,
-		CamelName: strcase.ToLowerCamel(s.Name),
-		KebabName: strcase.ToKebab(s.Name),
+		CamelName: strcase2.ToLowerCamel(s.Name),
+		KebabName: strcase2.ToKebab(s.Name),
 		Fields:    s.Fields,
 	})
 	if err != nil {
@@ -104,7 +105,7 @@ func generateService(baseDir, pkgName string, s GenerateStruct) error {
 	}
 	c := b.String()
 
-	p, err := getFilePath(baseDir, "/services/"+strcase.ToSnake(s.Name+"_service.go"))
+	p, err := getFilePath(baseDir, "/services/"+strcase2.ToSnake(s.Name+"_service.go"))
 	if err != nil {
 		return err
 	}
@@ -116,8 +117,8 @@ func generateController(baseDir, pkgName string, s GenerateStruct) error {
 	err := controllerTmpl.Execute(&b, &InputData{
 		PkgName:   pkgName,
 		Name:      s.Name,
-		CamelName: strcase.ToLowerCamel(s.Name),
-		KebabName: strcase.ToKebab(s.Name),
+		CamelName: strcase2.ToLowerCamel(s.Name),
+		KebabName: strcase2.ToKebab(s.Name),
 		Fields:    s.Fields,
 	})
 	if err != nil {
@@ -125,7 +126,7 @@ func generateController(baseDir, pkgName string, s GenerateStruct) error {
 	}
 	c := b.String()
 
-	p, err := getFilePath(baseDir, "/controllers/admin/"+strcase.ToSnake(s.Name+"_controller.go"))
+	p, err := getFilePath(baseDir, "/controllers/admin/"+strcase2.ToSnake(s.Name+"_controller.go"))
 	if err != nil {
 		return err
 	}
@@ -137,7 +138,7 @@ func generateWeb(baseDir, pkgName string, s GenerateStruct) error {
 	err := viewIndexTmpl.Execute(&b, &InputData{
 		PkgName:   pkgName,
 		Name:      s.Name,
-		KebabName: strcase.ToKebab(s.Name),
+		KebabName: strcase2.ToKebab(s.Name),
 		Fields:    s.Fields,
 	})
 	if err != nil {
@@ -145,7 +146,7 @@ func generateWeb(baseDir, pkgName string, s GenerateStruct) error {
 	}
 	c := b.String()
 
-	sub := path.Join("/web/admin/src/views/", strcase.ToKebab(s.Name), "index.vue")
+	sub := path.Join("/web/admin/src/views/", strcase2.ToKebab(s.Name), "index.vue")
 
 	p, err := getFilePath(baseDir, sub)
 	if err != nil {
@@ -162,7 +163,7 @@ func getFilePath(baseDir, sub string) (filepath string, err error) {
 }
 
 func writeFile(filepath string, content string) error {
-	exists, err := PathExists(filepath)
+	exists, err := files.PathExists(filepath)
 	if err != nil {
 		return err
 	}
@@ -170,5 +171,5 @@ func writeFile(filepath string, content string) error {
 		fmt.Println("文件已经存在...", filepath)
 		return errors.New("文件已经存在..." + filepath)
 	}
-	return WriteString(filepath, content, true)
+	return files.WriteString(filepath, content, true)
 }

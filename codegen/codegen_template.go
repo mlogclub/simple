@@ -1,4 +1,4 @@
-package simple
+package codegen
 
 import "html/template"
 

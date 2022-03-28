@@ -33,12 +33,12 @@ func toCamelInitCase(s string, initCase bool) string {
 	return n
 }
 
-// Converts a string to CamelCase
+// ToCamel Converts a string to CamelCase
 func ToCamel(s string) string {
 	return toCamelInitCase(s, true)
 }
 
-// Converts a string to lowerCamelCase
+// ToLowerCamel Converts a string to lowerCamelCase
 func ToLowerCamel(s string) string {
 	if s == "" {
 		return s

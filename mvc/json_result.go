@@ -1,4 +1,9 @@
-package simple
+package mvc
+
+import (
+	"github.com/mlogclub/simple"
+	"github.com/mlogclub/simple/db"
+)
 
 type JsonResult struct {
 	ErrorCode int         `json:"errorCode"`
@@ -32,15 +37,15 @@ func JsonItemList(data []interface{}) *JsonResult {
 	}
 }
 
-func JsonPageData(results interface{}, page *Paging) *JsonResult {
-	return JsonData(&PageResult{
+func JsonPageData(results interface{}, page *db.Paging) *JsonResult {
+	return JsonData(&db.PageResult{
 		Results: results,
 		Page:    page,
 	})
 }
 
 func JsonCursorData(results interface{}, cursor string, hasMore bool) *JsonResult {
-	return JsonData(&CursorResult{
+	return JsonData(&db.CursorResult{
 		Results: results,
 		Cursor:  cursor,
 		HasMore: hasMore,
@@ -55,7 +60,7 @@ func JsonSuccess() *JsonResult {
 	}
 }
 
-func JsonError(err *CodeError) *JsonResult {
+func JsonError(err *simple.CodeError) *JsonResult {
 	return &JsonResult{
 		ErrorCode: err.Code,
 		Message:   err.Message,
@@ -104,7 +109,7 @@ func NewRspBuilder(obj interface{}) *RspBuilder {
 }
 
 func NewRspBuilderExcludes(obj interface{}, excludes ...string) *RspBuilder {
-	return &RspBuilder{Data: StructToMap(obj, excludes...)}
+	return &RspBuilder{Data: simple.StructToMap(obj, excludes...)}
 }
 
 func (builder *RspBuilder) Put(key string, value interface{}) *RspBuilder {

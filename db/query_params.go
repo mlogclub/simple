@@ -1,9 +1,9 @@
-package simple
+package db
 
 import (
 	"github.com/kataras/iris/v12"
-
-	"github.com/mlogclub/simple/strcase"
+	"github.com/mlogclub/simple/common/strcase"
+	"github.com/mlogclub/simple/mvc/params"
 )
 
 type QueryParams struct {
@@ -85,18 +85,18 @@ func (q *QueryParams) PageByReq() *QueryParams {
 	if q.Ctx == nil {
 		return q
 	}
-	paging := GetPaging(q.Ctx)
+	paging := params.GetPaging(q.Ctx)
 	q.Page(paging.Page, paging.Limit)
 	return q
 }
 
 func (q *QueryParams) Asc(column string) *QueryParams {
-	q.Orders = append(q.Orders, OrderByCol{Column: column, Asc: true})
+	q.Orders = append(q.Orders, db.OrderByCol{Column: column, Asc: true})
 	return q
 }
 
 func (q *QueryParams) Desc(column string) *QueryParams {
-	q.Orders = append(q.Orders, OrderByCol{Column: column, Asc: false})
+	q.Orders = append(q.Orders, db.OrderByCol{Column: column, Asc: false})
 	return q
 }
 
@@ -107,7 +107,7 @@ func (q *QueryParams) Limit(limit int) *QueryParams {
 
 func (q *QueryParams) Page(page, limit int) *QueryParams {
 	if q.Paging == nil {
-		q.Paging = &Paging{Page: page, Limit: limit}
+		q.Paging = &db.Paging{Page: page, Limit: limit}
 	} else {
 		q.Paging.Page = page
 		q.Paging.Limit = limit

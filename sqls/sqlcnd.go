@@ -1,4 +1,4 @@
-package db
+package sqls
 
 import (
 	"github.com/sirupsen/logrus"
@@ -10,6 +10,17 @@ type SqlCnd struct {
 	Params     []ParamPair  // 参数
 	Orders     []OrderByCol // 排序
 	Paging     *Paging      // 分页
+}
+
+type ParamPair struct {
+	Query string        // 查询
+	Args  []interface{} // 参数
+}
+
+// OrderByCol 排序信息
+type OrderByCol struct {
+	Column string // 排序字段
+	Asc    bool   // 是否正序
 }
 
 func NewSqlCnd() *SqlCnd {

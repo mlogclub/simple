@@ -1,8 +1,8 @@
-package mvc
+package web
 
 import (
 	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/db"
+	"github.com/mlogclub/simple/sqls"
 )
 
 type JsonResult struct {
@@ -37,15 +37,15 @@ func JsonItemList(data []interface{}) *JsonResult {
 	}
 }
 
-func JsonPageData(results interface{}, page *db.Paging) *JsonResult {
-	return JsonData(&db.PageResult{
+func JsonPageData(results interface{}, page *sqls.Paging) *JsonResult {
+	return JsonData(&PageResult{
 		Results: results,
 		Page:    page,
 	})
 }
 
 func JsonCursorData(results interface{}, cursor string, hasMore bool) *JsonResult {
-	return JsonData(&db.CursorResult{
+	return JsonData(&CursorResult{
 		Results: results,
 		Cursor:  cursor,
 		HasMore: hasMore,

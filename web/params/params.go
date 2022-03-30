@@ -3,16 +3,15 @@ package params
 import (
 	"errors"
 	"fmt"
+	"github.com/mlogclub/simple/sqls"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/db"
-
 	"github.com/iris-contrib/schema"
 	"github.com/kataras/iris/v12"
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/strs"
 )
 
 var (
@@ -159,7 +158,7 @@ func FormDate(ctx iris.Context, name string) *time.Time {
 	return nil
 }
 
-func GetPaging(ctx iris.Context) *db.Paging {
+func GetPaging(ctx iris.Context) *sqls.Paging {
 	page := FormValueIntDefault(ctx, "page", 1)
 	limit := FormValueIntDefault(ctx, "limit", 20)
 	if page <= 0 {
@@ -168,5 +167,5 @@ func GetPaging(ctx iris.Context) *db.Paging {
 	if limit <= 0 {
 		limit = 20
 	}
-	return &db.Paging{Page: page, Limit: limit}
+	return &sqls.Paging{Page: page, Limit: limit}
 }

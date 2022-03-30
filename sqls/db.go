@@ -1,4 +1,4 @@
-package db
+package sqls
 
 import (
 	"database/sql"
@@ -17,7 +17,7 @@ var (
 	sqlDB *sql.DB
 )
 
-func OpenDB(dsn string, config *gorm.Config, maxIdleConns, maxOpenConns int, models ...interface{}) (err error) {
+func Open(dsn string, config *gorm.Config, maxIdleConns, maxOpenConns int, models ...interface{}) (err error) {
 	if config == nil {
 		config = &gorm.Config{}
 	}
@@ -47,13 +47,11 @@ func OpenDB(dsn string, config *gorm.Config, maxIdleConns, maxOpenConns int, mod
 	return
 }
 
-// 获取数据库链接
 func DB() *gorm.DB {
 	return db
 }
 
-// 关闭连接
-func CloseDB() {
+func Close() {
 	if sqlDB == nil {
 		return
 	}

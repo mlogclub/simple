@@ -3,12 +3,12 @@ package params
 import (
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/strcase"
-	"github.com/mlogclub/simple/db"
+	"github.com/mlogclub/simple/sqls"
 )
 
 type QueryParams struct {
 	Ctx iris.Context
-	db.SqlCnd
+	sqls.SqlCnd
 }
 
 func NewQueryParams(ctx iris.Context) *QueryParams {
@@ -91,12 +91,12 @@ func (q *QueryParams) PageByReq() *QueryParams {
 }
 
 func (q *QueryParams) Asc(column string) *QueryParams {
-	q.Orders = append(q.Orders, db.OrderByCol{Column: column, Asc: true})
+	q.Orders = append(q.Orders, sqls.OrderByCol{Column: column, Asc: true})
 	return q
 }
 
 func (q *QueryParams) Desc(column string) *QueryParams {
-	q.Orders = append(q.Orders, db.OrderByCol{Column: column, Asc: false})
+	q.Orders = append(q.Orders, sqls.OrderByCol{Column: column, Asc: false})
 	return q
 }
 
@@ -107,7 +107,7 @@ func (q *QueryParams) Limit(limit int) *QueryParams {
 
 func (q *QueryParams) Page(page, limit int) *QueryParams {
 	if q.Paging == nil {
-		q.Paging = &db.Paging{Page: page, Limit: limit}
+		q.Paging = &sqls.Paging{Page: page, Limit: limit}
 	} else {
 		q.Paging.Page = page
 		q.Paging.Limit = limit

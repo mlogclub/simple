@@ -1,4 +1,4 @@
-package db
+package sqls
 
 import (
 	"database/sql"
@@ -32,7 +32,7 @@ type TestArticle struct {
 func TestQueryParams(t *testing.T) {
 	models := []interface{}{&TestUser{}, &TestArticle{}}
 
-	if err := OpenDB("root:123456@tcp(localhost:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&loc=Local",
+	if err := Open("root:123456@tcp(localhost:3306)/bbsgo_db?charset=utf8mb4&parseTime=True&loc=Local",
 		nil, 5, 20, models...); err != nil {
 		panic(err)
 	}

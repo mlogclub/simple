@@ -1,14 +1,14 @@
-package db
+package params
 
 import (
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/strcase"
-	"github.com/mlogclub/simple/mvc/params"
+	"github.com/mlogclub/simple/db"
 )
 
 type QueryParams struct {
 	Ctx iris.Context
-	SqlCnd
+	db.SqlCnd
 }
 
 func NewQueryParams(ctx iris.Context) *QueryParams {
@@ -85,7 +85,7 @@ func (q *QueryParams) PageByReq() *QueryParams {
 	if q.Ctx == nil {
 		return q
 	}
-	paging := params.GetPaging(q.Ctx)
+	paging := GetPaging(q.Ctx)
 	q.Page(paging.Page, paging.Limit)
 	return q
 }

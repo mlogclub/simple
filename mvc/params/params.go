@@ -3,12 +3,13 @@ package params
 import (
 	"errors"
 	"fmt"
-	"github.com/mlogclub/simple/common/dates"
-	"github.com/mlogclub/simple/common/strs"
-	"github.com/mlogclub/simple/db"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/strs"
+	"github.com/mlogclub/simple/db"
 
 	"github.com/iris-contrib/schema"
 	"github.com/kataras/iris/v12"
@@ -34,8 +35,6 @@ func ReadForm(ctx iris.Context, obj interface{}) error {
 	if len(values) == 0 {
 		return nil
 	}
-	decoder := schema.NewDecoder()
-	decoder.ZeroEmpty(true)
 	return decoder.Decode(obj, values)
 }
 

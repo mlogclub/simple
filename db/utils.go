@@ -2,7 +2,7 @@ package db
 
 import "database/sql"
 
-// 分页请求数据
+// Paging 分页请求数据
 type Paging struct {
 	Page  int   `json:"page"`  // 页码
 	Limit int   `json:"limit"` // 每页条数
@@ -33,19 +33,19 @@ type ParamPair struct {
 	Args  []interface{} // 参数
 }
 
-// 排序信息
+// OrderByCol 排序信息
 type OrderByCol struct {
 	Column string // 排序字段
 	Asc    bool   // 是否正序
 }
 
-// 分页返回数据
+// PageResult 分页返回数据
 type PageResult struct {
 	Page    *Paging     `json:"page"`    // 分页信息
 	Results interface{} `json:"results"` // 数据
 }
 
-// Cursor分页返回数据
+// CursorResult Cursor分页返回数据
 type CursorResult struct {
 	Results interface{} `json:"results"` // 数据
 	Cursor  string      `json:"cursor"`  // 下一页

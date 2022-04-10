@@ -1,8 +1,8 @@
 package web
 
 import (
-	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/sqls"
+	"simple"
+	"simple/sqls"
 )
 
 type JsonResult struct {
@@ -60,7 +60,7 @@ func JsonSuccess() *JsonResult {
 	}
 }
 
-func JsonError(err *simple.CodeError) *JsonResult {
+func JsonError(err *CodeError) *JsonResult {
 	return &JsonResult{
 		ErrorCode: err.Code,
 		Message:   err.Message,

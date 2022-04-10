@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/mlogclub/simple"
-	"github.com/mlogclub/simple/common/files"
-	strcase2 "github.com/mlogclub/simple/common/strcase"
 	"os"
 	"path"
 	"reflect"
+	"simple"
+	"simple/common/files"
+	strcase2 "simple/common/strcase"
 
 	"github.com/sirupsen/logrus"
 )

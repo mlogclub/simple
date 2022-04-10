@@ -1,6 +1,6 @@
 package web
 
-import "github.com/mlogclub/simple/sqls"
+import "simple/sqls"
 
 // PageResult 分页返回数据
 type PageResult struct {

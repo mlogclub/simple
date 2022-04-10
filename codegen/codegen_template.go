@@ -6,7 +6,7 @@ var repositoryTmpl = template.Must(template.New("repository").Parse(`package rep
 
 import (
 	"{{.PkgName}}/model"
-	"github.com/mlogclub/simple"
+	"simple"
 	"gorm.io/gorm"
 )
 
@@ -99,7 +99,7 @@ var serviceTmpl = template.Must(template.New("service").Parse(`package services
 import (
 	"{{.PkgName}}/model"
 	"{{.PkgName}}/repositories"
-	"github.com/mlogclub/simple"
+	"simple"
 )
 
 var {{.Name}}Service = new{{.Name}}Service()
@@ -166,7 +166,7 @@ var controllerTmpl = template.Must(template.New("controller").Parse(`package adm
 import (
 	"{{.PkgName}}/model"
 	"{{.PkgName}}/services"
-	"github.com/mlogclub/simple"
+	"simple"
 	"github.com/kataras/iris/v12"
 	"strconv"
 )

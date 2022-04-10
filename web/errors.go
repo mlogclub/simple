@@ -4,10 +4,6 @@ import (
 	"strconv"
 )
 
-var (
-	ErrorNotLogin = NewError(1, "请先登录")
-)
-
 func NewError(code int, text string) *CodeError {
 	return &CodeError{code, text, nil}
 }

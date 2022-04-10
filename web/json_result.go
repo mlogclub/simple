@@ -1,8 +1,8 @@
 package web
 
 import (
-	"simple"
-	"simple/sqls"
+	"github.com/mlogclub/simple/common/structs"
+	"github.com/mlogclub/simple/sqls"
 )
 
 type JsonResult struct {
@@ -109,7 +109,7 @@ func NewRspBuilder(obj interface{}) *RspBuilder {
 }
 
 func NewRspBuilderExcludes(obj interface{}, excludes ...string) *RspBuilder {
-	return &RspBuilder{Data: simple.StructToMap(obj, excludes...)}
+	return &RspBuilder{Data: structs.StructToMap(obj, excludes...)}
 }
 
 func (builder *RspBuilder) Put(key string, value interface{}) *RspBuilder {

@@ -1,4 +1,4 @@
-package json
+package jsons
 
 import (
 	"fmt"

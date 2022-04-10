@@ -2,8 +2,8 @@ package params
 
 import (
 	"github.com/kataras/iris/v12"
-	"simple/common/strcase"
-	"simple/sqls"
+	"github.com/mlogclub/simple/common/strs/strcase"
+	"github.com/mlogclub/simple/sqls"
 )
 
 type QueryParams struct {

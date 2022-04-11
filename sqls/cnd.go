@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type SqlCnd struct {
+type Cnd struct {
 	SelectCols []string     // 要查询的字段，如果为空，表示查询所有字段
 	Params     []ParamPair  // 参数
 	Orders     []OrderByCol // 排序
@@ -23,93 +23,93 @@ type OrderByCol struct {
 	Asc    bool   // 是否正序
 }
 
-func NewSqlCnd() *SqlCnd {
-	return &SqlCnd{}
+func NewCnd() *Cnd {
+	return &Cnd{}
 }
 
-func (s *SqlCnd) Cols(selectCols ...string) *SqlCnd {
+func (s *Cnd) Cols(selectCols ...string) *Cnd {
 	if len(selectCols) > 0 {
 		s.SelectCols = append(s.SelectCols, selectCols...)
 	}
 	return s
 }
 
-func (s *SqlCnd) Eq(column string, args ...interface{}) *SqlCnd {
+func (s *Cnd) Eq(column string, args ...interface{}) *Cnd {
 	s.Where(column+" = ?", args)
 	return s
 }
 
-func (s *SqlCnd) NotEq(column string, args ...interface{}) *SqlCnd {
+func (s *Cnd) NotEq(column string, args ...interface{}) *Cnd {
 	s.Where(column+" <> ?", args)
 	return s
 }
 
-func (s *SqlCnd) Gt(column string, args ...interface{}) *SqlCnd {
+func (s *Cnd) Gt(column string, args ...interface{}) *Cnd {
 	s.Where(column+" > ?", args)
 	return s
 }
 
-func (s *SqlCnd) Gte(column string, args ...interface{}) *SqlCnd {
+func (s *Cnd) Gte(column string, args ...interface{}) *Cnd {
 	s.Where(column+" >= ?", args)
 	return s
 }
 
-func (s *SqlCnd) Lt(column string, args ...interface{}) *SqlCnd {
+func (s *Cnd) Lt(column string, args ...interface{}) *Cnd {
 	s.Where(column+" < ?", args)
 	return s
 }
 
-func (s *SqlCnd) Lte(column string, args ...interface{}) *SqlCnd {
+func (s *Cnd) Lte(column string, args ...interface{}) *Cnd {
 	s.Where(column+" <= ?", args)
 	return s
 }
 
-func (s *SqlCnd) Like(column string, str string) *SqlCnd {
+func (s *Cnd) Like(column string, str string) *Cnd {
 	s.Where(column+" LIKE ?", "%"+str+"%")
 	return s
 }
 
-func (s *SqlCnd) Starting(column string, str string) *SqlCnd {
+func (s *Cnd) Starting(column string, str string) *Cnd {
 	s.Where(column+" LIKE ?", str+"%")
 	return s
 }
 
-func (s *SqlCnd) Ending(column string, str string) *SqlCnd {
+func (s *Cnd) Ending(column string, str string) *Cnd {
 	s.Where(column+" LIKE ?", "%"+str)
 	return s
 }
 
-func (s *SqlCnd) In(column string, params interface{}) *SqlCnd {
+func (s *Cnd) In(column string, params interface{}) *Cnd {
 	s.Where(column+" in (?) ", params)
 	return s
 }
 
-func (s *SqlCnd) NotIn(column string, params interface{}) *SqlCnd {
+func (s *Cnd) NotIn(column string, params interface{}) *Cnd {
 	s.Where(column+" not in (?) ", params)
 	return s
 }
 
-func (s *SqlCnd) Where(query string, args ...interface{}) *SqlCnd {
+func (s *Cnd) Where(query string, args ...interface{}) *Cnd {
 	s.Params = append(s.Params, ParamPair{query, args})
 	return s
 }
 
-func (s *SqlCnd) Asc(column string) *SqlCnd {
+func (s *Cnd) Asc(column string) *Cnd {
 	s.Orders = append(s.Orders, OrderByCol{Column: column, Asc: true})
 	return s
 }
 
-func (s *SqlCnd) Desc(column string) *SqlCnd {
+func (s *Cnd) Desc(column string) *Cnd {
 	s.Orders = append(s.Orders, OrderByCol{Column: column, Asc: false})
 	return s
 }
 
-func (s *SqlCnd) Limit(limit int) *SqlCnd {
+func (s *Cnd) Limit(limit int) *Cnd {
 	s.Page(1, limit)
 	return s
 }
 
-func (s *SqlCnd) Page(page, limit int) *SqlCnd {
+func (s *Cnd) Page(page, limit int) *Cnd {
 	if s.Paging == nil {
 		s.Paging = &Paging{Page: page, Limit: limit}
 	} else {
@@ -119,7 +119,7 @@ func (s *SqlCnd) Page(page, limit int) *SqlCnd {
 	return s
 }
 
-func (s *SqlCnd) Build(db *gorm.DB) *gorm.DB {
+func (s *Cnd) Build(db *gorm.DB) *gorm.DB {
 	ret := db
 
 	if len(s.SelectCols) > 0 {
@@ -156,20 +156,20 @@ func (s *SqlCnd) Build(db *gorm.DB) *gorm.DB {
 	return ret
 }
 
-func (s *SqlCnd) Find(db *gorm.DB, out interface{}) {
+func (s *Cnd) Find(db *gorm.DB, out interface{}) {
 	if err := s.Build(db).Find(out).Error; err != nil {
 		logrus.Error(err)
 	}
 }
 
-func (s *SqlCnd) FindOne(db *gorm.DB, out interface{}) error {
+func (s *Cnd) FindOne(db *gorm.DB, out interface{}) error {
 	if err := s.Limit(1).Build(db).First(out).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (s *SqlCnd) Count(db *gorm.DB, model interface{}) int64 {
+func (s *Cnd) Count(db *gorm.DB, model interface{}) int64 {
 	ret := db.Model(model)
 
 	// where

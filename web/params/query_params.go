@@ -8,7 +8,7 @@ import (
 
 type QueryParams struct {
 	Ctx iris.Context
-	sqls.SqlCnd
+	sqls.Cnd
 }
 
 func NewQueryParams(ctx iris.Context) *QueryParams {

@@ -60,13 +60,16 @@ func JsonSuccess() *JsonResult {
 	}
 }
 
-func JsonError(err *CodeError) *JsonResult {
-	return &JsonResult{
-		ErrorCode: err.Code,
-		Message:   err.Message,
-		Data:      err.Data,
-		Success:   false,
+func JsonError(err error) *JsonResult {
+	if e, ok := err.(*CodeError); ok {
+		return &JsonResult{
+			ErrorCode: e.Code,
+			Message:   e.Message,
+			Data:      e.Data,
+			Success:   false,
+		}
 	}
+	return JsonErrorMsg(err.Error())
 }
 
 func JsonErrorMsg(message string) *JsonResult {

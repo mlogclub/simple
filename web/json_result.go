@@ -77,22 +77,22 @@ func JsonError(err error) *JsonResult {
 	}
 }
 
-// func JsonErrorMsg(message string) *JsonResult {
-// 	return &JsonResult{
-// 		ErrorCode: 0,
-// 		Message:   message,
-// 		Data:      nil,
-// 		Success:   false,
-// 	}
-// }
-// func JsonErrorCode(code int, message string) *JsonResult {
-// 	return &JsonResult{
-// 		ErrorCode: code,
-// 		Message:   message,
-// 		Data:      nil,
-// 		Success:   false,
-// 	}
-// }
+func JsonErrorMsg(message string) *JsonResult {
+	return &JsonResult{
+		ErrorCode: 0,
+		Message:   message,
+		Data:      nil,
+		Success:   false,
+	}
+}
+func JsonErrorCode(code int, message string) *JsonResult {
+	return &JsonResult{
+		ErrorCode: code,
+		Message:   message,
+		Data:      nil,
+		Success:   false,
+	}
+}
 
 func JsonErrorData(code int, message string, data interface{}) *JsonResult {
 	return &JsonResult{

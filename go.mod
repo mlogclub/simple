@@ -7,9 +7,9 @@ require (
 	github.com/iris-contrib/schema v0.0.6
 	github.com/kataras/iris/v12 v12.2.0-beta6
 	github.com/sirupsen/logrus v1.9.0
-	golang.org/x/crypto v0.0.0-20221010152910-d6f0a8c073c2
-	gorm.io/driver/mysql v1.3.3
-	gorm.io/gorm v1.23.4
+	golang.org/x/crypto v0.1.0
+	gorm.io/driver/mysql v1.4.3
+	gorm.io/gorm v1.24.1
 )
 
 require (
@@ -52,8 +52,8 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/yosssi/ace v0.0.5 // indirect
-	golang.org/x/net v0.0.0-20221004154528-8021a29435af // indirect
-	golang.org/x/sys v0.0.0-20221010170243-090e33056c14 // indirect
+	golang.org/x/net v0.1.0 // indirect
+	golang.org/x/sys v0.1.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/time v0.0.0-20220922220347-f3bd1da661af // indirect
 	google.golang.org/protobuf v1.28.1 // indirect

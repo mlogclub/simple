@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/iris-contrib/go.uuid v2.0.0+incompatible
 	github.com/iris-contrib/schema v0.0.6
-	github.com/kataras/iris/v12 v12.2.0-beta5
+	github.com/kataras/iris/v12 v12.2.0-beta6
 	github.com/sirupsen/logrus v1.9.0
 	golang.org/x/crypto v0.0.0-20221010152910-d6f0a8c073c2
 	gorm.io/driver/mysql v1.3.3
@@ -16,6 +16,7 @@ require (
 	github.com/BurntSushi/toml v1.2.0 // indirect
 	github.com/CloudyKit/fastprinter v0.0.0-20200109182630-33d98a066a53 // indirect
 	github.com/CloudyKit/jet/v6 v6.1.0 // indirect
+	github.com/Joker/jade v1.1.3 // indirect
 	github.com/Shopify/goreferrer v0.0.0-20220729165902-8cddb4f5de06 // indirect
 	github.com/andybalholm/brotli v1.0.4 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
@@ -27,7 +28,6 @@ require (
 	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
-	github.com/iris-contrib/jade v1.1.4 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
@@ -39,7 +39,7 @@ require (
 	github.com/kataras/tunnel v0.0.4 // indirect
 	github.com/klauspost/compress v1.15.11 // indirect
 	github.com/kr/pretty v0.3.0 // indirect
-	github.com/mailgun/raymond/v2 v2.0.46 // indirect
+	github.com/mailgun/raymond/v2 v2.0.47 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.21 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
@@ -54,7 +54,7 @@ require (
 	github.com/yosssi/ace v0.0.5 // indirect
 	golang.org/x/net v0.0.0-20221004154528-8021a29435af // indirect
 	golang.org/x/sys v0.0.0-20221010170243-090e33056c14 // indirect
-	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/time v0.0.0-20220922220347-f3bd1da661af // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect

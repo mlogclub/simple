@@ -3,10 +3,12 @@ package params
 import (
 	"errors"
 	"fmt"
-	"github.com/mlogclub/simple/sqls"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/mlogclub/simple/sqls"
+	"github.com/spf13/cast"
 
 	"github.com/iris-contrib/schema"
 	"github.com/kataras/iris/v12"
@@ -35,6 +37,77 @@ func ReadForm(ctx iris.Context, obj interface{}) error {
 		return nil
 	}
 	return decoder.Decode(obj, values)
+}
+
+func Get(ctx iris.Context, name string) (string, bool) {
+	str := ctx.FormValue(name)
+	return str, str != ""
+}
+
+func GetInt64(c iris.Context, name string) (int64, bool) {
+	str, ok := Get(c, name)
+	if !ok {
+		return 0, false
+	}
+	value, err := cast.ToInt64E(str)
+	if err != nil {
+		return 0, false
+	}
+	return value, true
+}
+
+func GetInt(c iris.Context, name string) (int, bool) {
+	str, ok := Get(c, name)
+	if !ok {
+		return 0, false
+	}
+	value, err := cast.ToIntE(str)
+	if err != nil {
+		return 0, false
+	}
+	return value, true
+}
+
+func GetBool(c iris.Context, name string) (bool, bool) {
+	str, ok := Get(c, name)
+	if !ok {
+		return false, false
+	}
+	value, err := cast.ToBoolE(str)
+	if err != nil {
+		return false, false
+	}
+	return value, true
+}
+
+func GetTime(ctx iris.Context, name string) *time.Time {
+	value, _ := Get(ctx, name)
+	if strs.IsBlank(value) {
+		return nil
+	}
+	layouts := []string{dates.FmtDateTime, dates.FmtDate, dates.FmtDateTimeNoSeconds}
+	for _, layout := range layouts {
+		if ret, err := dates.Parse(value, layout); err == nil {
+			return &ret
+		}
+	}
+	return nil
+}
+
+func GetInt64Arr(c iris.Context, name string) []int64 {
+	str, ok := Get(c, name)
+	if ok {
+		ss := strings.Split(str, ",")
+		var ret []int64
+		for _, s := range ss {
+			i, err := cast.ToInt64E(s)
+			if err == nil {
+				ret = append(ret, i)
+			}
+		}
+		return ret
+	}
+	return nil
 }
 
 func FormValue(ctx iris.Context, name string) string {

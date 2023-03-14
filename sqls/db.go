@@ -2,6 +2,7 @@ package sqls
 
 import (
 	"database/sql"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
@@ -13,12 +14,20 @@ type GormModel struct {
 	Id int64 `gorm:"primaryKey;autoIncrement" json:"id" form:"id"`
 }
 
+type DbConfig struct {
+	Dsn                    string
+	MaxIdleConns           int
+	MaxOpenConns           int
+	ConnMaxIdleTimeSeconds int
+	ConnMaxLifetimeSeconds int
+}
+
 var (
 	db    *gorm.DB
 	sqlDB *sql.DB
 )
 
-func Open(dsn string, config *gorm.Config, maxIdleConns, maxOpenConns int, models ...interface{}) (err error) {
+func Open(dbConfig DbConfig, config *gorm.Config, models ...interface{}) (err error) {
 	if config == nil {
 		config = &gorm.Config{}
 	}
@@ -30,14 +39,16 @@ func Open(dsn string, config *gorm.Config, maxIdleConns, maxOpenConns int, model
 		}
 	}
 
-	if db, err = gorm.Open(mysql.Open(dsn), config); err != nil {
+	if db, err = gorm.Open(mysql.Open(dbConfig.Dsn), config); err != nil {
 		log.Errorf("opens database failed: %s", err.Error())
 		return
 	}
 
 	if sqlDB, err = db.DB(); err == nil {
-		sqlDB.SetMaxIdleConns(maxIdleConns)
-		sqlDB.SetMaxOpenConns(maxOpenConns)
+		sqlDB.SetMaxIdleConns(dbConfig.MaxIdleConns)
+		sqlDB.SetMaxOpenConns(dbConfig.MaxOpenConns)
+		sqlDB.SetConnMaxIdleTime(time.Duration(dbConfig.ConnMaxIdleTimeSeconds) * time.Second)
+		sqlDB.SetConnMaxLifetime(time.Duration(dbConfig.ConnMaxLifetimeSeconds) * time.Second)
 	} else {
 		log.Error(err)
 	}

@@ -15,11 +15,11 @@ type GormModel struct {
 }
 
 type DbConfig struct {
-	Dsn                    string
-	MaxIdleConns           int
-	MaxOpenConns           int
-	ConnMaxIdleTimeSeconds int
-	ConnMaxLifetimeSeconds int
+	Url                    string `yaml:"Url"`
+	MaxIdleConns           int    `yaml:"MaxIdleConns"`
+	MaxOpenConns           int    `yaml:"MaxOpenConns"`
+	ConnMaxIdleTimeSeconds int    `yaml:"ConnMaxIdleTimeSeconds"`
+	ConnMaxLifetimeSeconds int    `yaml:"ConnMaxLifetimeSeconds"`
 }
 
 var (
@@ -39,7 +39,7 @@ func Open(dbConfig DbConfig, config *gorm.Config, models ...interface{}) (err er
 		}
 	}
 
-	if db, err = gorm.Open(mysql.Open(dbConfig.Dsn), config); err != nil {
+	if db, err = gorm.Open(mysql.Open(dbConfig.Url), config); err != nil {
 		log.Errorf("opens database failed: %s", err.Error())
 		return
 	}

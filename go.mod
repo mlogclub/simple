@@ -1,6 +1,6 @@
 module github.com/mlogclub/simple
 
-go 1.19
+go 1.20
 
 require (
 	github.com/iris-contrib/go.uuid v2.0.0+incompatible

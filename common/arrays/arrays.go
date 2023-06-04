@@ -5,33 +5,33 @@ import (
 	"strings"
 )
 
-func Contains(search interface{}, target interface{}) bool {
-	targetValue := reflect.ValueOf(target)
-	switch reflect.TypeOf(target).Kind() {
+func Contains(obj interface{}, arr interface{}) bool {
+	targetValue := reflect.ValueOf(arr)
+	switch reflect.TypeOf(arr).Kind() {
 	case reflect.Slice, reflect.Array:
 		for i := 0; i < targetValue.Len(); i++ {
-			if targetValue.Index(i).Interface() == search {
+			if targetValue.Index(i).Interface() == obj {
 				return true
 			}
 		}
 	case reflect.Map:
-		if targetValue.MapIndex(reflect.ValueOf(search)).IsValid() {
+		if targetValue.MapIndex(reflect.ValueOf(obj)).IsValid() {
 			return true
 		}
 	}
 	return false
 }
 
-func ContainsIgnoreCase(search string, target []string) bool {
-	if len(search) == 0 {
+func ContainsIgnoreCase(str string, arr []string) bool {
+	if len(str) == 0 {
 		return false
 	}
-	if len(target) == 0 {
+	if len(arr) == 0 {
 		return false
 	}
-	search = strings.ToLower(search)
-	for i := 0; i < len(target); i++ {
-		if strings.ToLower(target[i]) == search {
+	str = strings.ToLower(str)
+	for i := 0; i < len(arr); i++ {
+		if strings.ToLower(arr[i]) == str {
 			return true
 		}
 	}

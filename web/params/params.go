@@ -80,6 +80,30 @@ func GetBool(c iris.Context, name string) (bool, bool) {
 	return value, true
 }
 
+func GetFloat32(c iris.Context, name string) (float32, bool) {
+	str, ok := Get(c, name)
+	if !ok {
+		return 0, false
+	}
+	value, err := cast.ToFloat32E(str)
+	if err != nil {
+		return 0, false
+	}
+	return value, true
+}
+
+func GetFloat64(c iris.Context, name string) (float64, bool) {
+	str, ok := Get(c, name)
+	if !ok {
+		return 0, false
+	}
+	value, err := cast.ToFloat64E(str)
+	if err != nil {
+		return 0, false
+	}
+	return value, true
+}
+
 func GetTime(ctx iris.Context, name string) *time.Time {
 	value, _ := Get(ctx, name)
 	if strs.IsBlank(value) {

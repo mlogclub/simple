@@ -131,3 +131,10 @@ func (builder *RspBuilder) Build() map[string]interface{} {
 func (builder *RspBuilder) JsonResult() *JsonResult {
 	return JsonData(builder.Data)
 }
+
+func ConvertList[T any](results []T, conv func(item T) map[string]interface{}) (list []map[string]interface{}) {
+	for _, item := range results {
+		list = append(list, conv(item))
+	}
+	return
+}

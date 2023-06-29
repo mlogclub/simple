@@ -9,14 +9,19 @@ import (
 
 /*
 IsBlank checks if a string is whitespace or empty (""). Observe the following behavior:
-    goutils.IsBlank("")        = true
-    goutils.IsBlank(" ")       = true
-    goutils.IsBlank("bob")     = false
-    goutils.IsBlank("  bob  ") = false
+
+	goutils.IsBlank("")        = true
+	goutils.IsBlank(" ")       = true
+	goutils.IsBlank("bob")     = false
+	goutils.IsBlank("  bob  ") = false
+
 Parameter:
-    str - the string to check
+
+	str - the string to check
+
 Returns:
-    true - if the string is whitespace or empty ("")
+
+	true - if the string is whitespace or empty ("")
 */
 func IsBlank(str string) bool {
 	strLen := len(str)
@@ -95,4 +100,22 @@ func UUID() string {
 func RuneLen(s string) int {
 	bt := []rune(s)
 	return len(bt)
+}
+
+func LeftPad(str string, length int, padStr string) string {
+	if length <= len(str) {
+		return str
+	}
+	lenDiff := length - len(str)
+	times := (lenDiff + len(padStr) - 1) / len(padStr)
+	return strings.Repeat(padStr, times)[:lenDiff] + str
+}
+
+func RightPad(str string, length int, padStr string) string {
+	if length <= len(str) {
+		return str
+	}
+	lenDiff := length - len(str)
+	times := (lenDiff + len(padStr) - 1) / len(padStr)
+	return str + strings.Repeat(padStr, times)[:lenDiff]
 }

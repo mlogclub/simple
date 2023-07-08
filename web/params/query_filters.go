@@ -29,14 +29,14 @@ type QueryFilter struct {
 	ColumnName string  // 列名
 }
 
-func NewSqlCnd(ctx iris.Context, filters ...QueryFilter) *sqls.Cnd {
-	cnd := NewSqlCndWithoutPage(ctx, filters...)
+func NewPagedSqlCnd(ctx iris.Context, filters ...QueryFilter) *sqls.Cnd {
+	cnd := NewSqlCnd(ctx, filters...)
 	p := GetPaging(ctx)
 	cnd.Page(p.Page, p.Limit)
 	return cnd
 }
 
-func NewSqlCndWithoutPage(ctx iris.Context, filters ...QueryFilter) *sqls.Cnd {
+func NewSqlCnd(ctx iris.Context, filters ...QueryFilter) *sqls.Cnd {
 	cnd := sqls.NewCnd()
 	for _, filter := range filters {
 		var (

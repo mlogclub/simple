@@ -43,11 +43,14 @@ func NewSqlCnd(ctx iris.Context, filters ...QueryFilter) *sqls.Cnd {
 			columnName = filter.ColumnName
 			paramValue = ctx.FormValue(filter.ParamName)
 		)
-		if strs.IsBlank(columnName) {
-			columnName = strcase.ToSnake(filter.ParamName)
-		}
 		if strs.IsBlank(paramValue) {
 			continue
+		}
+		if strs.IsBlank(string(filter.Op)) {
+			filter.Op = Eq
+		}
+		if strs.IsBlank(columnName) {
+			columnName = strcase.ToSnake(filter.ParamName)
 		}
 		if filter.Op == Eq {
 			cnd.Eq(columnName, paramValue)

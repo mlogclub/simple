@@ -41,3 +41,14 @@ func Exec[T any](f func() (T, error)) Future[T] {
 		},
 	}
 }
+
+func (f Future[T]) AwaitNoError() T {
+	v, _ := f.await(context.Background())
+	return v
+}
+
+func ExecNoErr[T any](f func() T) Future[T] {
+	return Exec(func() (T, error) {
+		return f(), nil
+	})
+}

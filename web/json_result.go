@@ -134,7 +134,9 @@ func (builder *RspBuilder) JsonResult() *JsonResult {
 
 func ConvertList[T any](results []T, conv func(item T) map[string]interface{}) (list []map[string]interface{}) {
 	for _, item := range results {
-		list = append(list, conv(item))
+		if ret := conv(item); ret != nil {
+			list = append(list, ret)
+		}
 	}
 	return
 }

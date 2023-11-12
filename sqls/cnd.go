@@ -35,57 +35,57 @@ func (s *Cnd) Cols(selectCols ...string) *Cnd {
 }
 
 func (s *Cnd) Eq(column string, args ...interface{}) *Cnd {
-	s.Where(column+" = ?", args)
+	s.Where(KeywordWrap(column)+" = ?", args)
 	return s
 }
 
 func (s *Cnd) NotEq(column string, args ...interface{}) *Cnd {
-	s.Where(column+" <> ?", args)
+	s.Where(KeywordWrap(column)+" <> ?", args)
 	return s
 }
 
 func (s *Cnd) Gt(column string, args ...interface{}) *Cnd {
-	s.Where(column+" > ?", args)
+	s.Where(KeywordWrap(column)+" > ?", args)
 	return s
 }
 
 func (s *Cnd) Gte(column string, args ...interface{}) *Cnd {
-	s.Where(column+" >= ?", args)
+	s.Where(KeywordWrap(column)+" >= ?", args)
 	return s
 }
 
 func (s *Cnd) Lt(column string, args ...interface{}) *Cnd {
-	s.Where(column+" < ?", args)
+	s.Where(KeywordWrap(column)+" < ?", args)
 	return s
 }
 
 func (s *Cnd) Lte(column string, args ...interface{}) *Cnd {
-	s.Where(column+" <= ?", args)
+	s.Where(KeywordWrap(column)+" <= ?", args)
 	return s
 }
 
 func (s *Cnd) Like(column string, str string) *Cnd {
-	s.Where(column+" LIKE ?", "%"+str+"%")
+	s.Where(KeywordWrap(column)+" LIKE ?", "%"+str+"%")
 	return s
 }
 
 func (s *Cnd) Starting(column string, str string) *Cnd {
-	s.Where(column+" LIKE ?", str+"%")
+	s.Where(KeywordWrap(column)+" LIKE ?", str+"%")
 	return s
 }
 
 func (s *Cnd) Ending(column string, str string) *Cnd {
-	s.Where(column+" LIKE ?", "%"+str)
+	s.Where(KeywordWrap(column)+" LIKE ?", "%"+str)
 	return s
 }
 
 func (s *Cnd) In(column string, params interface{}) *Cnd {
-	s.Where(column+" in (?) ", params)
+	s.Where(KeywordWrap(column)+" in (?) ", params)
 	return s
 }
 
 func (s *Cnd) NotIn(column string, params interface{}) *Cnd {
-	s.Where(column+" not in (?) ", params)
+	s.Where(KeywordWrap(column)+" not in (?) ", params)
 	return s
 }
 
@@ -95,12 +95,12 @@ func (s *Cnd) Where(query string, args ...interface{}) *Cnd {
 }
 
 func (s *Cnd) Asc(column string) *Cnd {
-	s.Orders = append(s.Orders, OrderByCol{Column: column, Asc: true})
+	s.Orders = append(s.Orders, OrderByCol{Column: KeywordWrap(column), Asc: true})
 	return s
 }
 
 func (s *Cnd) Desc(column string) *Cnd {
-	s.Orders = append(s.Orders, OrderByCol{Column: column, Asc: false})
+	s.Orders = append(s.Orders, OrderByCol{Column: KeywordWrap(column), Asc: false})
 	return s
 }
 
@@ -133,7 +133,7 @@ func (s *Cnd) Build(db *gorm.DB) *gorm.DB {
 	// where
 	if len(s.Params) > 0 {
 		for _, param := range s.Params {
-			ret = ret.Where(KeywordWrap(param.Query), param.Args...)
+			ret = ret.Where(param.Query, param.Args...)
 		}
 	}
 
@@ -141,9 +141,9 @@ func (s *Cnd) Build(db *gorm.DB) *gorm.DB {
 	if len(s.Orders) > 0 {
 		for _, order := range s.Orders {
 			if order.Asc {
-				ret = ret.Order(KeywordWrap(order.Column) + " ASC")
+				ret = ret.Order(order.Column + " ASC")
 			} else {
-				ret = ret.Order(KeywordWrap(order.Column) + " DESC")
+				ret = ret.Order(order.Column + " DESC")
 			}
 		}
 	}
@@ -179,7 +179,7 @@ func (s *Cnd) Count(db *gorm.DB, model interface{}) int64 {
 	// where
 	if len(s.Params) > 0 {
 		for _, query := range s.Params {
-			ret = ret.Where(KeywordWrap(query.Query), query.Args...)
+			ret = ret.Where(query.Query, query.Args...)
 		}
 	}
 

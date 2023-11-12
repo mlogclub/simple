@@ -123,13 +123,17 @@ func (s *Cnd) Build(db *gorm.DB) *gorm.DB {
 	ret := db
 
 	if len(s.SelectCols) > 0 {
-		ret = ret.Select(s.SelectCols)
+		cols := make([]string, len(s.SelectCols))
+		for i, col := range s.SelectCols {
+			cols[i] = KeywordWrap(col)
+		}
+		ret = ret.Select(cols)
 	}
 
 	// where
 	if len(s.Params) > 0 {
 		for _, param := range s.Params {
-			ret = ret.Where(param.Query, param.Args...)
+			ret = ret.Where(KeywordWrap(param.Query), param.Args...)
 		}
 	}
 
@@ -137,9 +141,9 @@ func (s *Cnd) Build(db *gorm.DB) *gorm.DB {
 	if len(s.Orders) > 0 {
 		for _, order := range s.Orders {
 			if order.Asc {
-				ret = ret.Order(order.Column + " ASC")
+				ret = ret.Order(KeywordWrap(order.Column) + " ASC")
 			} else {
-				ret = ret.Order(order.Column + " DESC")
+				ret = ret.Order(KeywordWrap(order.Column) + " DESC")
 			}
 		}
 	}

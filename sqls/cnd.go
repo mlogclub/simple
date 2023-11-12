@@ -179,7 +179,7 @@ func (s *Cnd) Count(db *gorm.DB, model interface{}) int64 {
 	// where
 	if len(s.Params) > 0 {
 		for _, query := range s.Params {
-			ret = ret.Where(query.Query, query.Args...)
+			ret = ret.Where(KeywordWrap(query.Query), query.Args...)
 		}
 	}
 

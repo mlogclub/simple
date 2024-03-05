@@ -3,6 +3,7 @@ package params
 import (
 	"errors"
 	"fmt"
+	"log/slog"
 	"strconv"
 	"strings"
 	"time"
@@ -13,6 +14,7 @@ import (
 	"github.com/iris-contrib/schema"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple/common/dates"
+	"github.com/mlogclub/simple/common/jsons"
 	"github.com/mlogclub/simple/common/strs"
 )
 
@@ -121,17 +123,31 @@ func GetTime(ctx iris.Context, name string) *time.Time {
 func GetInt64Arr(c iris.Context, name string) []int64 {
 	str, ok := Get(c, name)
 	if ok {
+		str = strings.TrimSpace(str)
+		if strings.HasPrefix(str, "[") && strings.HasSuffix(str, "]") {
+			var ret []int64
+			if err := jsons.Parse(str, &ret); err != nil {
+				slog.Error(err.Error())
+			}
+			return ret
+		} else {
+			return StrSplitToInt64Arr(str)
+		}
+	}
+	return nil
+}
+
+func StrSplitToInt64Arr(str string) (ret []int64) {
+	if strs.IsNotBlank(str) {
 		ss := strings.Split(str, ",")
-		var ret []int64
 		for _, s := range ss {
 			i, err := cast.ToInt64E(s)
 			if err == nil {
 				ret = append(ret, i)
 			}
 		}
-		return ret
 	}
-	return nil
+	return
 }
 
 func FormValue(ctx iris.Context, name string) string {
@@ -182,22 +198,16 @@ func FormValueInt64Default(ctx iris.Context, name string, def int64) int64 {
 
 func FormValueInt64Array(ctx iris.Context, name string) []int64 {
 	str := ctx.FormValue(name)
-	if str == "" {
-		return nil
-	}
-	ss := strings.Split(str, ",")
-	if len(ss) == 0 {
-		return nil
-	}
-	var ret []int64
-	for _, v := range ss {
-		item, err := strconv.ParseInt(v, 10, 64)
-		if err != nil {
-			continue
+	str = strings.TrimSpace(str)
+	if strings.HasPrefix(str, "[") && strings.HasSuffix(str, "]") {
+		var ret []int64
+		if err := jsons.Parse(str, &ret); err != nil {
+			slog.Error(err.Error())
 		}
-		ret = append(ret, item)
+		return ret
+	} else {
+		return StrSplitToInt64Arr(str)
 	}
-	return ret
 }
 
 func FormValueStringArray(ctx iris.Context, name string) []string {

@@ -1,7 +1,8 @@
 package sqls
 
 import (
-	"github.com/sirupsen/logrus"
+	"log/slog"
+
 	"gorm.io/gorm"
 )
 
@@ -162,7 +163,7 @@ func (s *Cnd) Build(db *gorm.DB) *gorm.DB {
 
 func (s *Cnd) Find(db *gorm.DB, out interface{}) {
 	if err := s.Build(db).Find(out).Error; err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error(), slog.Any("error", err))
 	}
 }
 
@@ -185,7 +186,7 @@ func (s *Cnd) Count(db *gorm.DB, model interface{}) int64 {
 
 	var count int64
 	if err := ret.Count(&count).Error; err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error(), slog.Any("error", err))
 	}
 	return count
 }

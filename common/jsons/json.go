@@ -2,9 +2,9 @@ package jsons
 
 import (
 	"encoding/json"
+	"log/slog"
 
 	"github.com/mlogclub/simple/common/strs"
-	"github.com/sirupsen/logrus"
 )
 
 func Parse(str string, t interface{}) error {
@@ -35,7 +35,7 @@ func ToStr(t interface{}) (string, error) {
 func ToJsonStr(t interface{}) string {
 	str, err := ToStr(t)
 	if err != nil {
-		logrus.Error(err)
+		slog.Error(err.Error(), slog.Any("error", err))
 		return ""
 	}
 	return str

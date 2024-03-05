@@ -1,12 +1,11 @@
 module github.com/mlogclub/simple
 
-go 1.20
+go 1.22
 
 require (
 	github.com/iris-contrib/go.uuid v2.0.0+incompatible
 	github.com/iris-contrib/schema v0.0.6
 	github.com/kataras/iris/v12 v12.2.0
-	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cast v1.5.0
 	golang.org/x/crypto v0.7.0
 	gorm.io/driver/mysql v1.4.7
@@ -42,6 +41,7 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.23 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/schollz/closestmatch v2.1.0+incompatible // indirect
+	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/tdewolff/minify/v2 v2.12.5 // indirect
 	github.com/tdewolff/parse/v2 v2.6.5 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect

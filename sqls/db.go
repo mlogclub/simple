@@ -2,9 +2,9 @@ package sqls
 
 import (
 	"database/sql"
+	"log/slog"
 	"time"
 
-	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -40,7 +40,7 @@ func Open(dbConfig DbConfig, config *gorm.Config, models ...interface{}) (err er
 	}
 
 	if db, err = gorm.Open(mysql.Open(dbConfig.Url), config); err != nil {
-		log.Errorf("opens database failed: %s", err.Error())
+		slog.Error("opens database failed", slog.Any("error", err))
 		return
 	}
 
@@ -50,11 +50,11 @@ func Open(dbConfig DbConfig, config *gorm.Config, models ...interface{}) (err er
 		sqlDB.SetConnMaxIdleTime(time.Duration(dbConfig.ConnMaxIdleTimeSeconds) * time.Second)
 		sqlDB.SetConnMaxLifetime(time.Duration(dbConfig.ConnMaxLifetimeSeconds) * time.Second)
 	} else {
-		log.Error(err)
+		slog.Error(err.Error(), slog.Any("error", err))
 	}
 
 	if err = db.AutoMigrate(models...); nil != err {
-		log.Errorf("auto migrate tables failed: %s", err.Error())
+		slog.Error("auto migrate tables failed", slog.Any("error", err))
 	}
 	return
 }
@@ -68,6 +68,6 @@ func Close() {
 		return
 	}
 	if err := sqlDB.Close(); nil != err {
-		log.Errorf("Disconnect from database failed: %s", err.Error())
+		slog.Error("Disconnect from database failed", slog.Any("error", err))
 	}
 }

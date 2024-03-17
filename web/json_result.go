@@ -61,6 +61,9 @@ func JsonSuccess() *JsonResult {
 }
 
 func JsonError(err error) *JsonResult {
+	if err == nil {
+		return JsonSuccess()
+	}
 	if e, ok := err.(*CodeError); ok {
 		return &JsonResult{
 			ErrorCode: e.Code,

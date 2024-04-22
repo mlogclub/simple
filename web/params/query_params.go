@@ -9,6 +9,7 @@ import (
 type QueryParams struct {
 	Ctx iris.Context
 	sqls.Cnd
+	gJsonResult *gjson.Result
 }
 
 func NewQueryParams(ctx iris.Context) *QueryParams {
@@ -18,6 +19,15 @@ func NewQueryParams(ctx iris.Context) *QueryParams {
 }
 
 func (q *QueryParams) getValueByColumn(column string) string {
+	
+	if q.Ctx.GetHeader("Content-Type") == "application/json" {
+		if q.gJsonResult == nil {
+			result := gjson.Parse(q.Ctx.String()
+			q.gJsonResult = &result
+		}
+		return q.gJsonResult.Get(column).String()
+	}
+
 	if q.Ctx == nil {
 		return ""
 	}

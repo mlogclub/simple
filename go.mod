@@ -7,6 +7,7 @@ require (
 	github.com/iris-contrib/schema v0.0.6
 	github.com/kataras/iris/v12 v12.2.10
 	github.com/spf13/cast v1.6.0
+	github.com/tidwall/gjson v1.17.1
 	golang.org/x/crypto v0.21.0
 	gorm.io/driver/mysql v1.5.4
 	gorm.io/gorm v1.25.7
@@ -44,7 +45,6 @@ require (
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/tdewolff/minify/v2 v2.20.14 // indirect
 	github.com/tdewolff/parse/v2 v2.7.8 // indirect
-	github.com/tidwall/gjson v1.17.1 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect

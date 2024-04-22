@@ -20,13 +20,16 @@ func NewQueryParams(ctx iris.Context) *QueryParams {
 }
 
 func (q *QueryParams) getValueByColumn(column string) string {
-	
-	if q.Ctx.GetHeader("Content-Type") == "application/json" {
+	if q.Ctx.GetContentTypeRequested() == "application/json" {
 		if q.gJsonResult == nil {
-			result := gjson.Parse(q.Ctx.String()
+			body, err := q.Ctx.GetBody()
+			if err != nil {
+				panic(err)
+			}
+			result := gjson.ParseBytes(body)
 			q.gJsonResult = &result
 		}
-		return q.gJsonResult.Get(column).String()
+		return q.gJsonResult.Get(strcase.ToLowerCamel(column)).String()
 	}
 
 	if q.Ctx == nil {
@@ -122,6 +125,15 @@ func (q *QueryParams) Page(page, limit int) *QueryParams {
 	} else {
 		q.Paging.Page = page
 		q.Paging.Limit = limit
+	}
+	return q
+}
+
+func (q *QueryParams) BetweenByReq(column string) *QueryParams {
+	value := q.getValueByColumn(column)
+	result := gjson.Parse(value).Array()
+	if len(result) > 1 {
+		q.Cnd.Where(column+" BETWEEN ? AND ?", result[0].String(), result[1].String())
 	}
 	return q
 }

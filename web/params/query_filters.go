@@ -24,9 +24,10 @@ const (
 )
 
 type QueryFilter struct {
-	ParamName  string  // 请求参数名
-	Op         QueryOp // 操作符
-	ColumnName string  // 列名
+	ParamName    string                     // 请求参数名
+	Op           QueryOp                    // 操作符
+	ColumnName   string                     // 列名
+	ValueWrapper func(origin string) string // Value修饰器，可以
 }
 
 func NewPagedSqlCnd(ctx iris.Context, filters ...QueryFilter) *sqls.Cnd {
@@ -45,6 +46,9 @@ func NewSqlCnd(ctx iris.Context, filters ...QueryFilter) *sqls.Cnd {
 		)
 		if strs.IsBlank(paramValue) {
 			continue
+		}
+		if filter.ValueWrapper != nil {
+			paramValue = filter.ValueWrapper(paramValue)
 		}
 		if strs.IsBlank(string(filter.Op)) {
 			filter.Op = Eq

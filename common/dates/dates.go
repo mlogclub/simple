@@ -58,3 +58,7 @@ func GetDay(time time.Time) int {
 func WithTimeAsStartOfDay(t time.Time) time.Time {
 	return time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())
 }
+
+func WithTimeAsEndOfDay(t time.Time) time.Time {
+	return time.Date(t.Year(), t.Month(), t.Day(), 23, 59, 59, 1000000000-1, t.Location())
+}

@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/mlogclub/simple/sqls"
 	"github.com/spf13/cast"
 
@@ -19,7 +20,8 @@ import (
 )
 
 var (
-	decoder = schema.NewDecoder() // form, url, schema.
+	decoder  = schema.NewDecoder() // form, url, schema.
+	validate = validator.New()
 )
 
 func init() {
@@ -38,7 +40,24 @@ func ReadForm(ctx iris.Context, obj interface{}) error {
 	if len(values) == 0 {
 		return nil
 	}
-	return decoder.Decode(obj, values)
+	if err := decoder.Decode(obj, values); err != nil {
+		return err
+	}
+
+	if err := validate.Struct(obj); err != nil {
+		return err
+	}
+	return nil
+}
+
+func ReadJSON(ctx iris.Context, obj interface{}, opts ...iris.JSONReader) error {
+	if err := ctx.ReadJSON(obj, opts...); err != nil {
+		return err
+	}
+	if err := validate.Struct(obj); err != nil {
+		return err
+	}
+	return nil
 }
 
 func Get(ctx iris.Context, name string) (string, bool) {

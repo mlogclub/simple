@@ -33,6 +33,9 @@ func ToStr(t interface{}) (string, error) {
 }
 
 func ToJsonStr(t interface{}) string {
+	if t == nil {
+		return ""
+	}
 	str, err := ToStr(t)
 	if err != nil {
 		slog.Error(err.Error(), slog.Any("error", err))

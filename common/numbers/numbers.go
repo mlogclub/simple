@@ -1,6 +1,10 @@
 package numbers
 
-import "strconv"
+import (
+	"strconv"
+
+	"golang.org/x/exp/constraints"
+)
 
 // ToInt64 str to int64，如果转换失败，默认值为0
 // str 字符串
@@ -34,4 +38,18 @@ func ToIntByDefault(str string, def int) int {
 		val = def
 	}
 	return val
+}
+
+func Min[T constraints.Ordered](a, b T) T {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func Max[T constraints.Ordered](a, b T) T {
+	if a > b {
+		return a
+	}
+	return b
 }

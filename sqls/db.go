@@ -1,8 +1,6 @@
 package sqls
 
 import (
-	"database/sql"
-
 	"gorm.io/gorm"
 )
 
@@ -11,16 +9,15 @@ type GormModel struct {
 }
 
 type DbConfig struct {
-	Url                    string `yaml:"Url"`
-	MaxIdleConns           int    `yaml:"MaxIdleConns"`
-	MaxOpenConns           int    `yaml:"MaxOpenConns"`
-	ConnMaxIdleTimeSeconds int    `yaml:"ConnMaxIdleTimeSeconds"`
-	ConnMaxLifetimeSeconds int    `yaml:"ConnMaxLifetimeSeconds"`
+	Url                    string `yaml:"url"`
+	MaxIdleConns           int    `yaml:"maxIdleConns"`
+	MaxOpenConns           int    `yaml:"maxOpenConns"`
+	ConnMaxIdleTimeSeconds int    `yaml:"connMaxIdleTimeSeconds"`
+	ConnMaxLifetimeSeconds int    `yaml:"connMaxLifetimeSeconds"`
 }
 
 var (
-	_db   *gorm.DB
-	sqlDB *sql.DB
+	_db *gorm.DB
 )
 
 // func Open(dbConfig DbConfig, config *gorm.Config, models ...interface{}) (err error) {

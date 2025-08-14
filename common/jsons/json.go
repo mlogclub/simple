@@ -43,3 +43,14 @@ func ToJsonStr(t interface{}) string {
 	}
 	return str
 }
+
+func ToPrettyJsonStr(t interface{}) string {
+	if t == nil {
+		return ""
+	}
+	data, err := json.MarshalIndent(t, "", "  ")
+	if err != nil {
+		return ""
+	}
+	return string(data)
+}

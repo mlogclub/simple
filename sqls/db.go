@@ -9,6 +9,7 @@ type GormModel struct {
 }
 
 type DbConfig struct {
+	Type                   string `yaml:"type"` // mysql, postgres, sqlite
 	Url                    string `yaml:"url"`
 	MaxIdleConns           int    `yaml:"maxIdleConns"`
 	MaxOpenConns           int    `yaml:"maxOpenConns"`

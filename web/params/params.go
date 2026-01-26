@@ -31,7 +31,7 @@ func init() {
 
 // param error
 func paramError(name string) error {
-	return errors.New(fmt.Sprintf("unable to find param value '%s'", name))
+	return fmt.Errorf("unable to find param value '%s'", name)
 }
 
 // ReadForm read object from FormData

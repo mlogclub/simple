@@ -4,7 +4,7 @@ import (
 	"strings"
 	"unicode"
 
-	uuid "github.com/iris-contrib/go.uuid"
+	"github.com/google/uuid"
 )
 
 /*
@@ -88,11 +88,11 @@ func Equals(a, b string) bool {
 }
 
 func EqualsIgnoreCase(a, b string) bool {
-	return a == b || strings.ToUpper(a) == strings.ToUpper(b)
+	return a == b || strings.EqualFold(a, b)
 }
 
 func UUID() string {
-	u, _ := uuid.NewV4()
+	u, _ := uuid.NewV7()
 	return strings.ReplaceAll(u.String(), "-", "")
 }
 
